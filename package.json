@@ -1,0 +1,34 @@
+{
+  "name": "lightbroom",
+  "version": "0.0.0",
+  "description": "photo workflow software",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zz85/lightbroom.git"
+  },
+  "keywords": [
+    "photo",
+    "filters",
+    "effect",
+    "ps",
+    "webgl"
+  ],
+  "author": "Joshua Koo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zz85/lightbroom/issues"
+  },
+  "homepage": "https://github.com/zz85/lightbroom#readme",
+  "electronVersion": "0.36.2",
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.2",
+    "jimp": "^0.2.21"
+  }
+}

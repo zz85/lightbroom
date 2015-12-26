@@ -1,0 +1,385 @@
+<html>
+<body>
+	<link rel="stylesheet" href="cssgram.min.css">
+	<script src="ImageOpener.js"></script>
+
+	<div id="filters"></div>
+	<div id="peeks"></div>
+	
+	<div id="sliders"></div>
+
+	<div id="drop">drop photos here.....
+		<div id="big"></div>
+		
+		<!--<svg id="big" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		</svg>-->
+
+
+		<br/>
+		<div id="preview"></div>
+	</div>
+
+	<!--
+		initial potatoe prototype
+		http://jabtunes.com/labs/potatoe/0/
+
+		mouse over effect button to preview
+		http://jabtunes.com/labs/potatoe/1/
+
+		scrubbing effects
+		http://jabtunes.com/labs/potatoe/2/
+
+		scrubbing over photos bigger photos
+		http://jabtunes.com/labs/potatoe/3/
+
+		scrubbing the effects button
+		http://jabtunes.com/labs/potatoe/4/
+
+		flipping + scrubbing + preview
+		http://jabtunes.com/labs/potatoe/5/
+
+		less moving parts
+		http://jabtunes.com/labs/potatoe/5.1/
+
+		thumbnail snapshoot peeks
+		http://jabtunes.com/labs/potatoe/6/
+
+		before / after preview
+		http://jabtunes.com/labs/potatoe/7/
+		
+		resize thumbnails, stop filter scrub
+		http://jabtunes.com/labs/potatoe/8/
+		
+		cant remember which improvements
+		http://jabtunes.com/labs/potatoe/9/
+		
+		attempt to use js library caman
+		http://jabtunes.com/labs/potatoe/10/
+		
+		fixed .figure bug. remove scrubber
+		http://jabtunes.com/labs/potatoe/11/
+	-->
+
+	<style>
+		body {
+			background-color: #333740;
+			color: #ddd;
+			font-size: 13px;
+		}
+		.pic {
+			max-height: 320px;
+			max-width: 320px;
+
+			margin: 5px;
+		}
+
+		.peek {
+			max-height: 120px;
+			max-width: 120px;
+			float: left;
+			margin: 2px;
+		}
+
+		.big {
+			max-height: 590px;
+			max-width: 590px;
+		}
+
+		.orig {
+			max-height: 590px;
+			max-width: 590px;
+		}
+		
+		button {
+			padding: 8px;
+			margin: 4px 4px 14px 4px;
+			background-image: linear-gradient(-180deg, #7B7E87 0%, #555862 100%);
+			border: 1px solid #292B31;
+			box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.30), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.60);
+			border-radius: 4px;
+			color: #eaeaea;
+		}
+		
+		button:active {
+			box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
+		}
+		
+		button:hover {
+			background-image: -webkit-linear-gradient(#BDC2D0 0%, #656874 100%);
+			background-image: -o-linear-gradient(#BDC2D0 0%, #656874 100%);
+			background-image: linear-gradient(#BDC2D0 0%, #656874 100%);
+		}
+
+		img {
+			border: 1px solid transparent;
+		}
+
+		img:hover {
+			border: 1px solid #ddd;
+		}
+
+		#big {
+			display: inline-block;
+			width: 590px;
+			height: 390px;
+		}
+		
+		.dotted-border {
+			width: 360px;
+			height: 230px;
+			border: 2px dotted #676B78;
+			border-radius: 4px;
+		}
+		
+		.txt-drag-your-photos-here {
+			font-size: 15px;
+			color: #898D9B;
+		}
+		
+		#sliders {
+			right: 0px;
+			width: 200px;
+			position: absolute;
+			background:rgba(0, 0, 0, 0.30);
+		}
+
+	</style>
+
+	<script>
+
+		var opener = new ImageOpener(processImage);
+		var count = 0;
+		var maxLength = 240;
+
+		var preview = document.getElementById('preview');
+		var filters = document.getElementById('filters');
+		var peeks = document.getElementById('peeks');
+		var big = document.getElementById('big'), bigimg;
+
+		var styles = [
+			"aden",
+			"reyes",
+			"perpetua",
+			"inkwell",
+			"earlybird",
+			"toaster",
+			"walden",
+			"hudson",
+			"gingham",
+			"mayfair",
+			"lofi",
+			"xpro2",
+			"_1977",
+			"brooklyn",
+			"nashville",
+			"lark",
+			"moon"
+		];
+
+		var currentStyle = 'xpro2';
+		var saved;
+
+		styles.forEach( function(s) {
+			var b = document.createElement('button');
+			b.innerHTML = s;
+
+			b.onclick = function() {
+				saved = currentStyle;
+				switchStyle(s);
+			}
+
+			b.onmouseover = function() {
+				saved = currentStyle;
+				switchStyle(s);
+			}
+
+			b.onmouseout = function() {
+				switchStyle(saved);
+			}
+
+			filters.appendChild(b);
+		} )
+
+
+		function switchStyle(s) {
+			var old = currentStyle;
+
+			var pics = document.querySelectorAll('.pic, .big')
+
+			for (var i = 0; i < pics.length; i ++) {
+				var p = pics[i];
+				p.classList.remove(old);
+				p.classList.add(s);
+			}
+
+			currentStyle = s;
+		}
+
+		var all = [];
+
+		var x = 0;
+
+		var tmp;
+		var save;
+
+		var img = big;
+		var lasty;
+
+
+		img.onmouseover = function(e) {
+			save = currentStyle;
+		}
+
+		img.onmousemove = function(e) {
+			if (!bigimg) return;
+			var x = e.offsetX / bigimg.width;
+			var y = (e.offsetY / 3 | 0) % all.length;
+			if (lasty === undefined) lasty = y;
+
+			// var s = styles[x * styles.length | 0];
+
+			tmp = bigimg.classList[1];
+
+			// bigimg.classList.remove(tmp);
+			// bigimg.classList.add(s);
+
+			// bigimg.style.cssText = 'clip: rect(auto auto auto ' + (e.offsetX | 0) + 'px)';
+
+			if (lasty != y) {
+				// previewBig(all[y]);
+				lasty = y;
+			}
+		}
+
+		img.onmouseout = function(e) {
+			if (!bigimg) return;
+			tmp = bigimg.classList[1];
+			bigimg.classList.remove(tmp);
+			bigimg.classList.add(currentStyle);
+
+		}
+
+		img.onmousedown = function(e) {
+			save = bigimg.classList[1];
+			switchStyle(save);
+		}
+
+		function previewBig(img) {
+			// img = scaleImage(img, 590);
+
+			var child;
+			while (child = big.childNodes[0]) {
+				child.remove();
+			}
+
+			while (child = peeks.childNodes[0]) {
+				child.remove();
+			}
+
+			// original
+			// var n = document.createElement('figure');
+			// n.appendChild(img.cloneNode());
+			// n.classList.remove(n.classList[0]);
+			// n.classList.remove(n.classList[0]);
+			// n.classList.add('orig');
+			// big.appendChild(n);
+
+			//
+			// big.innerHTML = '<image x="0" y="0" width="275" height="95" xlink:href="' + img.src + '" />'
+			n = document.createElement('figure');
+			n.appendChild(img.cloneNode());
+			// n.classList.remove(n.classList[0]);
+			// n.classList.remove(n.classList[0]);
+			n.classList.add('big');
+			n.classList.add(currentStyle);
+			bigimg = n;
+
+			big.appendChild(n);
+			
+			// big.style.width = n.width + 'px';
+			// big.style.height = n.height + 'px';
+
+			img = scaleImage(img, maxLength);
+
+			styles.forEach(function(s) {
+				var m = document.createElement('figure');
+				m.appendChild(img.cloneNode());
+
+				while (m.classList.length) {
+					m.classList.remove(m.classList[0]);
+				}
+				m.classList.add('peek');
+				m.classList.add(s);
+
+				m.onmousedown = function() {
+					saved = currentStyle;
+					switchStyle(s);
+				}
+
+				m.onmouseover = function() {
+					saved = currentStyle;
+					switchStyle(s);
+				}
+
+				m.onmouseout = function() {
+					switchStyle(saved);
+				}
+				
+				peeks.appendChild(m);
+			});
+
+		}
+
+		function scaleImage(img, maxLength) {
+			var scale = img.width > img.height ? maxLength / img.width : maxLength / img.height;
+
+			var pixelCount = img.width * img.height;
+			// console.log('Dimensions',img.width, img.height, 'pixelCount', pixelCount);
+
+			var canvas = document.createElement('canvas');
+			var ctx = canvas.getContext('2d');
+
+			var targetWidth = img.width * scale;
+			var targetHeight = img.height * scale;
+			canvas.width = targetWidth;
+			canvas.height = targetHeight;
+			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+			// preview.appendChild(canvas);
+
+			// var imagedata = ctx.getImageData(0, 0, img.width, img.height);
+			// var data = imagedata.data;
+
+			var image = new Image();
+			image.src = canvas.toDataURL("image/png");
+
+			return image;
+		}
+
+		function processImage(img) {
+			// console.log('process image');
+			
+			previewBig(img);
+			
+			img = scaleImage(img, 390);
+
+			all.push(img);
+
+			img.classList.add('pic');
+			img.classList.add(currentStyle);
+
+			var figure = document.createElement('figure');
+			figure.appendChild(img);
+			preview.appendChild(figure);
+			
+			img.onclick = function() {
+				previewBig(this);
+			}
+
+		}
+
+
+	</script>
+
+</body>
+</html>
