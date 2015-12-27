@@ -19,11 +19,12 @@ var o = {
 // caveat - bounds must entirely be inside chrome's viewport!!
 // to capture this offscreen, see https://github.com/atom/electron/issues/2610
 win.capturePage(o, img => {
-	console.log(img.getSize())
-	fs.writeFileSync('screenshot.png', img.toPng());
-	fs.writeFileSync('screenshot.jpg', img.toJpeg(100));
+	// console.log(img.getSize())
+	// fs.writeFileSync('screenshot.png', img.toPng());
+	fs.writeFileSync('screenshot.jpg', img.toJpeg(98));
 });
 
+/*
 // pdf capture
 let options = {
 	marginType: 0,
@@ -38,3 +39,4 @@ win.printToPDF(options, function (err, data) {
 		if (err) console.error(err);
 	});
 });
+*/

@@ -13,7 +13,7 @@
 
 	<div id="drop">
 		<div id="toolbar">
-			<button>Save Image</button>
+			<button onclick="saveImage()">Save Image</button>
 			<!--<button>drop photos here.....</button>-->
 			drop photos here.....
 		</div>
@@ -176,6 +176,9 @@
 		var currentStyle = 'nofilter';
 		var saved;
 		var filterItems = new Map();
+		var filenames;
+		var selectedFile;
+		var currentImage;
 
 		styles.forEach( function(s) {
 			var div = document.createElement('div');
@@ -232,7 +235,6 @@
 		var img = big;
 		var lasty;
 
-
 		img.onmouseover = function(e) {
 			save = currentStyle;
 		}
@@ -271,7 +273,11 @@
 			switchStyle(save);
 		}
 
-		function previewBig(img, thumbnails) {
+		function previewBig(img, i) {
+			currentImage = img;
+			var thumbnails = i === 0;
+			if (filenames)
+				selectedFile = filenames[i];
 			img = scaleImage(img, 590);
 
 			var child;
@@ -354,8 +360,7 @@
 
 			// var canvas = getCanvas(img, 550);
 			// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
-			console.log('proc', i);
-			previewBig(oImg, i == 0);
+			previewBig(oImg, i);
 
 			img = scaleImage(oImg, 390);
 
@@ -369,25 +374,19 @@
 			preview.appendChild(figure);
 
 			img.onclick = function() {
-				previewBig(oImg);
+				previewBig(oImg, i);
 			}
 
 		}
 
 		if (typeof(global) === 'object') {
 			// check that we are in electron. then we cheat.
-			var electron = require('electron');
-			var nativeImage = electron.nativeImage;
-
-			var lastLoad = localStorage.lastLoad, filenames;
+			var lastLoad = localStorage.lastLoad;
 			if (lastLoad) {
 				filenames = JSON.parse(lastLoad);
 
 				filenames.forEach( (f, i) => {
 					console.log(f);
-					// console.time('frompath');
-					// var image = nativeImage.createFromPath(f); // 100ms
-					// var url = image.toDataURL(); // 3s
 					var now = Date.now();
 					var img = new Image();
 					img.src = f;
@@ -395,8 +394,48 @@
 						console.log('loaded', Date.now() - now);
 						processImage(img, i);
 					}
-					console.timeEnd('frompath');
 				} );
+
+			}
+
+			function saveImage() {
+				var electron = require('electron');
+				var remote = electron.remote;
+				var localScreen = electron.screen
+				var display = localScreen.getPrimaryDisplay().workAreaSize;
+
+				win = new remote.BrowserWindow ({
+					x: 0, // display.width
+					y: 0, // display.height
+					width: currentImage.naturalWidth + 500 * 1,
+					height: currentImage.naturalHeight + 500 * 1,
+					// resizable: false,
+					'skip-taskbar': true,
+					show: false,
+					'enable-larger-than-screen': true
+				});
+
+				win.loadURL(`file://${__dirname}/capture-image.html`);
+
+				var out = selectedFile.split('/').pop();
+				console.log('saving image', selectedFile, currentStyle, out);
+
+				 win.webContents.on('did-finish-load', function() {
+					 console.log('did-finish-load')
+					// window.webContents.send('ping', 'whoooooooh!');
+					win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${__dirname}/captures/${out}')`);
+				});
+
+				win.webContents.on('dom-ready', function() {
+					console.log('dom-ready')
+				});
+
+
+
+
+				//
+
+
 
 			}
 		}

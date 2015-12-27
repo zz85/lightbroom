@@ -1,5 +1,9 @@
-
-// Util Image Loader via HTML browser / drag and drop
+//
+// this is a simple image opener util file that supports
+// image loading via
+// 1. drag and drop
+// 2. browsing
+// 3. TODO clipboard paste
 // Load 3. Integration as JS file for demo
 
 function ImageOpener( processImage, target ) {
@@ -42,7 +46,6 @@ function ImageOpener( processImage, target ) {
 		}
 	}
 
-	var ii, iii;
 	function handlepaste (e) {
 		if (e && e.clipboardData && e.clipboardData.getData) {
 			// Webkit - get data from clipboard, put into editdiv, cleanup, then cancel event
@@ -98,10 +101,9 @@ function ImageOpener( processImage, target ) {
 	}
 
 	function dropBehavior(e) {
-		console.log('dropped');
+		console.log('dropped', e);
 		e.stopPropagation();
 		e.preventDefault();
-		console.log(e);
 		var files = e.dataTransfer.files;
 
 		var filenames = [];
