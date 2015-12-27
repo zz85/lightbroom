@@ -322,12 +322,10 @@
 		function processImage(img) {
 			// console.log('process image');
 
-			var canvas = getCanvas(img, 250);
-			var data = canvas.toDataURL();
-			console.log(data);
-			inlineSVGImg(data, canvas.width, canvas.height);
+			var canvas = getCanvas(img, 550);
+			inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
 
-			previewBig(img);
+			// previewBig(img);
 
 			img = scaleImage(img, 390);
 
@@ -336,9 +334,9 @@
 			img.classList.add('pic');
 			img.classList.add(currentStyle);
 
-			var figure = document.createElement('figure');
-			figure.appendChild(img);
-			preview.appendChild(figure);
+			// var figure = document.createElement('figure');
+			// figure.appendChild(img);
+			// preview.appendChild(figure);
 
 			img.onclick = function() {
 				previewBig(this);
@@ -349,56 +347,78 @@
 	</script>
 
 	<script>
-		/*
-		var canvas = document.createElement('canvas');
-var ctx = canvas.getContext('2d');
-
-var data = '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">' +
-           '<foreignObject width="100%" height="100%">' +
-           '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
-             '<em>I</em> like ' +
-             '<span style="color:white; text-shadow:0 0 2px blue;">' +
-             'cheese</span>' +
-           '</div>' +
-           '</foreignObject>' +
-           '</svg>';
-
-var DOMURL = window.URL || window.webkitURL || window;
-
-var img = new Image();
-var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-var url = DOMURL.createObjectURL(svg);
-
-img.onload = function () {
-  ctx.drawImage(img, 0, 0);
-  DOMURL.revokeObjectURL(url);
-  setTimeout(function() {
-	  console.log(canvas.toDataURL())
-  }, 1000)
-}
-
-img.src = url;
-
-document.body.appendChild(img);*/
-
-/*
-var div = document.createElement('div');
-
-div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
-	'<image width="20" height="20" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="/>' +
-	'</svg>';
-
-document.body.appendChild(div);
-*/
 
 function inlineSVGImg(data, width, height) {
 	width = width || 20;
 	hight = height || 20;
 	var div = document.createElement('div');
 
-	div.innerHTML = `<svg id="test" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		<image width="${width}" height="${height}" xlink:href="data:image/png;${data}"/>
+	var svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+		 id="test" width="${width}" height="${height}" >
+		 <defs>
+			<!-- https://docs.webplatform.org/wiki/svg/tutorials/smarter_svg_filters -->
+			<filter id="effect">
+			</filter>
+			<filter id="css_blur">
+				<feGaussianBlur stdDeviation="10"/>
+			</filter>
+			<filter id="sideways_blur">
+				<feGaussianBlur stdDeviation="10 1"/>
+			</filter>
+
+			<filter id="posterize">
+				<feComponentTransfer>
+					<feFuncR type="discrete"
+						tableValues="0 0.2 0.4 0.6 0.8 1"/>
+					<feFuncG type="discrete"
+						tableValues="0 0.2 0.4 0.6 0.8 1"/>
+					<feFuncB type="discrete"
+						tableValues="0 0.2 0.4 0.6 0.8 1"/>
+				</feComponentTransfer>
+			</filter>
+
+			<filter id="no_op">
+				<feComponentTransfer>
+					<feFuncR type="identity"/>
+					<feFuncG type="identity"/>
+					<feFuncB type="identity"/>
+					<feFuncA type="identity"/>
+				</feComponentTransfer>
+			</filter>
+		</defs>
+		<style>
+		/* <![CDATA[ */
+		.testing {
+			filter: url(#posterize);
+		}
+		/* ]]> */
+		</style>
+
+ <!-- filter="url(#effect)"   filter="url(#css_blur)" -->
+		<image class="testing" width="${width}" height="${height}" xlink:href="data:image/png;${data}"/>
 	</svg>`;
+
+	console.log(svg);
+
+	div.innerHTML = svg;
+
+	// proxy svg image
+	var img = new Image()
+	img.src = 'data:image/svg+xml;utf8,' + svg
+
+	// write svg image to canvas for pixels
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var context = canvas.getContext('2d');
+
+	context.drawImage(img, 0, 0, width, height);
+	// var a = document.createElement("a");
+	// a.download = 'test.png';
+	// a.href = canvas.toDataURL("image/png");
+	// a.click()
+	// z = cc.getImageData(0,0,c.width, c.height)
+
 
 	document.body.appendChild(div);
 }
