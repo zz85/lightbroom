@@ -5,12 +5,12 @@
 
 	<div id="filters"></div>
 	<div id="peeks"></div>
-	
+
 	<div id="sliders"></div>
 
 	<div id="drop">drop photos here.....
 		<div id="big"></div>
-		
+
 		<!--<svg id="big" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		</svg>-->
 
@@ -20,44 +20,7 @@
 	</div>
 
 	<!--
-		initial potatoe prototype
-		http://jabtunes.com/labs/potatoe/0/
-
-		mouse over effect button to preview
-		http://jabtunes.com/labs/potatoe/1/
-
-		scrubbing effects
-		http://jabtunes.com/labs/potatoe/2/
-
-		scrubbing over photos bigger photos
-		http://jabtunes.com/labs/potatoe/3/
-
-		scrubbing the effects button
-		http://jabtunes.com/labs/potatoe/4/
-
-		flipping + scrubbing + preview
-		http://jabtunes.com/labs/potatoe/5/
-
-		less moving parts
-		http://jabtunes.com/labs/potatoe/5.1/
-
-		thumbnail snapshoot peeks
-		http://jabtunes.com/labs/potatoe/6/
-
-		before / after preview
-		http://jabtunes.com/labs/potatoe/7/
-		
-		resize thumbnails, stop filter scrub
-		http://jabtunes.com/labs/potatoe/8/
-		
-		cant remember which improvements
-		http://jabtunes.com/labs/potatoe/9/
-		
-		attempt to use js library caman
-		http://jabtunes.com/labs/potatoe/10/
-		
-		fixed .figure bug. remove scrubber
-		http://jabtunes.com/labs/potatoe/11/
+		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
 	-->
 
 	<style>
@@ -89,7 +52,7 @@
 			max-height: 590px;
 			max-width: 590px;
 		}
-		
+
 		button {
 			padding: 8px;
 			margin: 4px 4px 14px 4px;
@@ -99,11 +62,11 @@
 			border-radius: 4px;
 			color: #eaeaea;
 		}
-		
+
 		button:active {
 			box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
 		}
-		
+
 		button:hover {
 			background-image: -webkit-linear-gradient(#BDC2D0 0%, #656874 100%);
 			background-image: -o-linear-gradient(#BDC2D0 0%, #656874 100%);
@@ -123,19 +86,19 @@
 			width: 590px;
 			height: 390px;
 		}
-		
+
 		.dotted-border {
 			width: 360px;
 			height: 230px;
 			border: 2px dotted #676B78;
 			border-radius: 4px;
 		}
-		
+
 		.txt-drag-your-photos-here {
 			font-size: 15px;
 			color: #898D9B;
 		}
-		
+
 		#sliders {
 			right: 0px;
 			width: 200px;
@@ -157,6 +120,7 @@
 		var big = document.getElementById('big'), bigimg;
 
 		var styles = [
+			"nofilter",
 			"aden",
 			"reyes",
 			"perpetua",
@@ -176,7 +140,7 @@
 			"moon"
 		];
 
-		var currentStyle = 'xpro2';
+		var currentStyle = 'nofilter';
 		var saved;
 
 		styles.forEach( function(s) {
@@ -295,7 +259,7 @@
 			bigimg = n;
 
 			big.appendChild(n);
-			
+
 			// big.style.width = n.width + 'px';
 			// big.style.height = n.height + 'px';
 
@@ -317,6 +281,7 @@
 				}
 
 				m.onmouseover = function() {
+					console.log(s);
 					saved = currentStyle;
 					switchStyle(s);
 				}
@@ -324,7 +289,7 @@
 				m.onmouseout = function() {
 					switchStyle(saved);
 				}
-				
+
 				peeks.appendChild(m);
 			});
 
@@ -358,9 +323,9 @@
 
 		function processImage(img) {
 			// console.log('process image');
-			
+
 			previewBig(img);
-			
+
 			img = scaleImage(img, 390);
 
 			all.push(img);
@@ -371,7 +336,7 @@
 			var figure = document.createElement('figure');
 			figure.appendChild(img);
 			preview.appendChild(figure);
-			
+
 			img.onclick = function() {
 				previewBig(this);
 			}

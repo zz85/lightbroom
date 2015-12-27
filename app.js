@@ -6,8 +6,6 @@ const app = electron.app;
 let mainWindow;
 
 function onClosed() {
-	// dereference the window
-	// for multiple windows store them in an array
 	mainWindow = null;
 }
 
