@@ -12,14 +12,13 @@
 	<div id="sliders"></div>
 
 	<div id="drop">
-		<div>
+		<div id="toolbar">
+			<button>Save Image</button>
+			<!--<button>drop photos here.....</button>-->
 			drop photos here.....
 		</div>
+
 		<div id="big"></div>
-
-		<!--<svg id="big" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		</svg>-->
-
 
 		<br/>
 		<div id="preview"></div>
@@ -272,7 +271,7 @@
 			switchStyle(save);
 		}
 
-		function previewBig(img) {
+		function previewBig(img, thumbnails) {
 			img = scaleImage(img, 590);
 
 			var child;
@@ -302,6 +301,8 @@
 
 			// big.style.width = n.width + 'px';
 			// big.style.height = n.height + 'px';
+
+			if (!thumbnails) return;
 
 			img = scaleImage(img, maxLength);
 
@@ -348,13 +349,13 @@
 			return canvas;
 		}
 
-		function processImage(oImg) {
+		function processImage(oImg, i) {
 			// console.log('process image');
 
 			// var canvas = getCanvas(img, 550);
 			// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
-
-			previewBig(oImg);
+			console.log('proc', i);
+			previewBig(oImg, i == 0);
 
 			img = scaleImage(oImg, 390);
 
@@ -370,6 +371,30 @@
 			img.onclick = function() {
 				previewBig(oImg);
 			}
+
+		}
+
+		var electron = require('electron');
+		var nativeImage = electron.nativeImage;
+
+		var lastLoad = localStorage.lastLoad, filenames;
+		if (lastLoad) {
+			filenames = JSON.parse(lastLoad);
+
+			filenames.forEach( (f, i) => {
+				console.log(f);
+				// console.time('frompath');
+				// var image = nativeImage.createFromPath(f); // 100ms
+				// var url = image.toDataURL(); // 3s
+				var now = Date.now();
+				var img = new Image();
+				img.src = f;
+				img.onload = function() {
+					console.log('loaded', Date.now() - now);
+					processImage(img, i);
+				}
+				console.timeEnd('frompath');
+			} );
 
 		}
 

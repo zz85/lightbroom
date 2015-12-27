@@ -38,7 +38,7 @@ function ImageOpener( processImage, target ) {
 					f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
 			}
 
-			openFile(files[i]);
+			openFile(files[i], i);
 		}
 	}
 
@@ -103,24 +103,32 @@ function ImageOpener( processImage, target ) {
 		e.preventDefault();
 		console.log(e);
 		var files = e.dataTransfer.files;
-		if (files.length) {			
+
+		var filenames = [];
+
+		if (files.length) {
 			for (var i = 0; i < files.length; i++) {
-				openFile(files[i]);
+				openFile(files[i], i);
+				filenames.push(files[i].path);
 			}
 		} else {
-			// debugger;
 			// TODO support copypaste/clipboard drag in
 		}
+
+		localStorage.lastLoad = JSON.stringify(filenames);
+		console.log('Got Files', filenames);
 	}
 
-	function openFile(file) {
+	function openFile(file, i) {
 		if (!file.type.match('image.*')) {
 			if (debug) console.log('image fail');
 			return;
 		}
 
 		var reader = new FileReader();
-		reader.onloadend = loadImage;
+		reader.onloadend = function(e) {
+			loadImage(e, i)
+		};
 
 		reader.onerror = errorHandler;
 
@@ -142,7 +150,7 @@ function ImageOpener( processImage, target ) {
 		// reader.readAsDataURL(file);
 	}
 
-	function loadImage(e) {
+	function loadImage(e, i) {
 		var target = e.target;
 		// console.log('loadImage', e); // e, target, reader, e.target.result
 		var img = document.createElement("img");
@@ -152,7 +160,7 @@ function ImageOpener( processImage, target ) {
 		// img.src = target.result;
 
 		img.onload = function(e) {
-			processImage(img);
+			processImage(img, i);
 		};
 	}
 
