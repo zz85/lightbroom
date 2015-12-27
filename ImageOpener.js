@@ -31,26 +31,21 @@ function ImageOpener( processImage, target ) {
 		var files = evt.target.files; // FileList object
 
 		// files is a FileList of File objects. List some properties.
-		var output = [];
-
-		if (debug) {
-			for (var i = 0, f; f = files[i]; i++) {
+		for (var i = 0, f; f = files[i]; i++) {
+			if (debug) {
 				console.log( 'detected', f.name, f.type,
 					f.size, ' bytes, last modified: ',
-					f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a'
-				);
+					f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
 			}
+
+			openFile(files[i]);
 		}
-
-		// if (files[0]) {
-		// 	openFile(files[0]);
-		// }
 	}
-
 
 	var ii, iii;
 	function handlepaste (e) {
-		if (e && e.clipboardData && e.clipboardData.getData) {// Webkit - get data from clipboard, put into editdiv, cleanup, then cancel event
+		if (e && e.clipboardData && e.clipboardData.getData) {
+			// Webkit - get data from clipboard, put into editdiv, cleanup, then cancel event
 			// ii = e.clipboardData.getData('jpg/image');
 			var items = e.clipboardData.items;
 
@@ -142,17 +137,20 @@ function ImageOpener( processImage, target ) {
 			console.log('onload');
 		};
 
+		reader.readAsArrayBuffer(file);
 		// reader.readAsBinaryString(file);
-		reader.readAsDataURL(file);
+		// reader.readAsDataURL(file);
 	}
 
 	function loadImage(e) {
-
 		var target = e.target;
-		console.log('loadImage', e); // e, target, reader, e.target.result
+		// console.log('loadImage', e); // e, target, reader, e.target.result
 		var img = document.createElement("img");
 
-		img.src = e.target.result;
+		var objectURL = URL.createObjectURL(new Blob([target.result]));
+		img.src = objectURL;
+		// img.src = target.result;
+
 		img.onload = function(e) {
 			processImage(img);
 		};
