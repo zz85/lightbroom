@@ -1,4 +1,7 @@
 <html>
+	<head>
+		<title>Lightbroom Preview</title>
+	</head>
 <body>
 	<link rel="stylesheet" href="cssgram.min.css">
 	<script src="ImageOpener.js"></script>
@@ -8,7 +11,10 @@
 
 	<div id="sliders"></div>
 
-	<div id="drop">drop photos here.....
+	<div id="drop">
+		<div>
+			drop photos here.....
+		</div>
 		<div id="big"></div>
 
 		<!--<svg id="big" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -34,6 +40,8 @@
 			max-width: 320px;
 
 			margin: 5px;
+
+			float: left;
 		}
 
 		.peek {
@@ -53,6 +61,17 @@
 			max-width: 590px;
 		}
 
+		.nofilter > img {
+			max-height: 120px;
+			max-width: 120px;
+		}
+
+		#filters {
+			display: flex;
+			border-bottom: 1px solid grey;
+			overflow: scroll;
+		}
+
 		button {
 			padding: 8px;
 			margin: 4px 4px 14px 4px;
@@ -61,6 +80,16 @@
 			box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.30), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.60);
 			border-radius: 4px;
 			color: #eaeaea;
+		}
+
+		.effect {
+			width: 120px;
+			display: block;
+			text-align: center;
+			font-weight: bold;
+			background: #111;
+			display: block;
+
 		}
 
 		button:active {
@@ -106,6 +135,11 @@
 			background:rgba(0, 0, 0, 0.30);
 		}
 
+		#preview {
+			/*display: flex;
+			overflow: scroll;*/
+		}
+
 	</style>
 
 	<script>
@@ -142,9 +176,13 @@
 
 		var currentStyle = 'nofilter';
 		var saved;
+		var filterItems = new Map();
 
 		styles.forEach( function(s) {
-			var b = document.createElement('button');
+			var div = document.createElement('div');
+
+			var b = document.createElement('b');
+			b.className = 'effect';
 			b.innerHTML = s;
 
 			b.onclick = function() {
@@ -161,7 +199,13 @@
 				switchStyle(saved);
 			}
 
-			filters.appendChild(b);
+			div.appendChild(b);
+
+			var figure = document.createElement('figure');
+			b.appendChild(figure);
+
+			filterItems.set(s, div);
+			filters.appendChild(div);
 		} )
 
 
@@ -229,14 +273,10 @@
 		}
 
 		function previewBig(img) {
-			// img = scaleImage(img, 590);
+			img = scaleImage(img, 590);
 
 			var child;
 			while (child = big.childNodes[0]) {
-				child.remove();
-			}
-
-			while (child = peeks.childNodes[0]) {
 				child.remove();
 			}
 
@@ -266,7 +306,12 @@
 			img = scaleImage(img, maxLength);
 
 			styles.forEach(function(s) {
-				var m = document.createElement('figure');
+				var m = filterItems.get(s).querySelector('figure');
+
+				while (child = m.childNodes[0]) {
+					child.remove();
+				}
+
 				m.appendChild(img.cloneNode());
 
 				while (m.classList.length) {
@@ -275,22 +320,6 @@
 				m.classList.add('peek');
 				m.classList.add(s);
 
-				m.onmousedown = function() {
-					saved = currentStyle;
-					switchStyle(s);
-				}
-
-				m.onmouseover = function() {
-					console.log(s);
-					saved = currentStyle;
-					switchStyle(s);
-				}
-
-				m.onmouseout = function() {
-					switchStyle(saved);
-				}
-
-				peeks.appendChild(m);
 			});
 
 		}
@@ -319,27 +348,27 @@
 			return canvas;
 		}
 
-		function processImage(img) {
+		function processImage(oImg) {
 			// console.log('process image');
 
-			var canvas = getCanvas(img, 550);
-			inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
+			// var canvas = getCanvas(img, 550);
+			// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
 
-			// previewBig(img);
+			previewBig(oImg);
 
-			img = scaleImage(img, 390);
+			img = scaleImage(oImg, 390);
 
 			all.push(img);
 
-			img.classList.add('pic');
-			img.classList.add(currentStyle);
+			var figure = document.createElement('figure');
+			figure.classList.add('pic');
+			figure.classList.add(currentStyle);
+			figure.appendChild(img);
 
-			// var figure = document.createElement('figure');
-			// figure.appendChild(img);
-			// preview.appendChild(figure);
+			preview.appendChild(figure);
 
 			img.onclick = function() {
-				previewBig(this);
+				previewBig(oImg);
 			}
 
 		}
