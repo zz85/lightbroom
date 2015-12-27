@@ -374,28 +374,31 @@
 
 		}
 
-		var electron = require('electron');
-		var nativeImage = electron.nativeImage;
+		if (typeof(global) === 'object') {
+			// check that we are in electron. then we cheat.
+			var electron = require('electron');
+			var nativeImage = electron.nativeImage;
 
-		var lastLoad = localStorage.lastLoad, filenames;
-		if (lastLoad) {
-			filenames = JSON.parse(lastLoad);
+			var lastLoad = localStorage.lastLoad, filenames;
+			if (lastLoad) {
+				filenames = JSON.parse(lastLoad);
 
-			filenames.forEach( (f, i) => {
-				console.log(f);
-				// console.time('frompath');
-				// var image = nativeImage.createFromPath(f); // 100ms
-				// var url = image.toDataURL(); // 3s
-				var now = Date.now();
-				var img = new Image();
-				img.src = f;
-				img.onload = function() {
-					console.log('loaded', Date.now() - now);
-					processImage(img, i);
-				}
-				console.timeEnd('frompath');
-			} );
+				filenames.forEach( (f, i) => {
+					console.log(f);
+					// console.time('frompath');
+					// var image = nativeImage.createFromPath(f); // 100ms
+					// var url = image.toDataURL(); // 3s
+					var now = Date.now();
+					var img = new Image();
+					img.src = f;
+					img.onload = function() {
+						console.log('loaded', Date.now() - now);
+						processImage(img, i);
+					}
+					console.timeEnd('frompath');
+				} );
 
+			}
 		}
 
 	</script>
