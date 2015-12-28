@@ -4,45 +4,41 @@ if (typeof(global) === 'object') {
 	// check that we are in electron. then we cheat.
 	var lastLoad = localStorage.lastLoad;
 	if (lastLoad) {
-		filenames = JSON.parse(lastLoad);
+		var filenames = JSON.parse(lastLoad);
+		// TODO move this to PhotoList deserializer
 
 		filenames.forEach( (f, i) => {
-			console.log(f);
+			console.log('Previously loaded', f);
 			var now = Date.now();
 			var img = new Image();
 			img.src = f;
 			img.onload = function() {
 				console.log('loaded', Date.now() - now);
-				processImage(img, i);
+				processImage(img, f, i);
 			}
 		} );
 	}
 
 	function saveImage() {
-		var out = selectedFile.split('/').pop();
+		var out = selectedPhoto.filename.split('/').pop();
 		out = `${__dirname}/captures/${out}`;
-		saveImageTo(selectedFile, currentStyle, out);
+		saveImageTo(selectedPhoto, currentStyle, out);
 	}
 
 	function saveAll() {
-		// filenames.forEach( (f, i) => {
-		// 	var out = f.split('/').pop();
-		// 	out = `${__dirname}/captures/${out}`;
-		// 	saveImageTo(f, currentStyle, out);
-		// });
-
-		var filenames2 = filenames.concat();
+		var items = photos.items();
 
 		var start = Date.now();
 
 		var ok = function() {
-			var f = filenames2.pop();
+			var f = items.pop();
 			if (!f) {
 				console.log('Batch Done!', (Date.now() - start) / 1000);
 				if (win) win.close();
 				return;
 			}
-			var out = f.split('/').pop();
+
+			var out = f.filename.split('/').pop();
 			out = `${__dirname}/captures/${out}`;
 			saveImageTo(f, currentStyle, out, ok);
 		}
@@ -65,7 +61,10 @@ if (typeof(global) === 'object') {
 		// remote.ipcMain.removeAllListeners();
 	}
 
-	function saveImageTo(selectedFile, currentStyle, out, done) {
+	function saveImageTo(photo, currentStyle, out, done) {
+
+		var selectedFile = photo.filename;
+		var currentImage = photo.img;
 
 		var localScreen = electron.screen
 		// var display = localScreen.getPrimaryDisplay().workAreaSize;
@@ -111,8 +110,6 @@ if (typeof(global) === 'object') {
 
 			if (done) {
 				done();
-			} else {
-				win.close();
 			}
 		});
 

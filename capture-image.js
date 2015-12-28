@@ -9,7 +9,6 @@ let win = remote.getCurrentWindow();
 
 var figure = document.getElementById('figure');
 function load (photo, style, filename) { // size
-	console.log('load', arguments);
 	while (figure.firstChild) {
 		figure.removeChild(figure.firstChild);
 	}

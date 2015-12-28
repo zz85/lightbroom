@@ -5,6 +5,7 @@
 <body>
 	<link rel="stylesheet" href="cssgram.min.css">
 	<script src="ImageOpener.js"></script>
+	<script src="photo.js"></script>
 
 	<div id="filters"></div>
 	<div id="peeks"></div>
@@ -56,14 +57,8 @@
 			max-width: 590px;
 		}
 
-		.orig {
-			max-height: 590px;
-			max-width: 590px;
-		}
-
-		.nofilter > img {
-			max-height: 120px;
-			max-width: 120px;
+		.nofilter img {
+			width: 100%;
 		}
 
 		#filters {
@@ -143,6 +138,8 @@
 	</style>
 
 	<script>
+		// TODO
+		// 1. Photo rotation
 
 		var opener = new ImageOpener(processImage);
 		var count = 0;
@@ -177,9 +174,11 @@
 		var currentStyle = 'nofilter';
 		var saved;
 		var filterItems = new Map();
+
 		var filenames;
-		var selectedFile;
-		var currentImage;
+		var selectedPhoto;
+
+		var photos = new PhotoList();
 
 		styles.forEach( function(s) {
 			var div = document.createElement('div');
@@ -226,8 +225,6 @@
 			currentStyle = s;
 		}
 
-		var all = [];
-
 		var x = 0;
 
 		var tmp;
@@ -241,24 +238,24 @@
 		}
 
 		img.onmousemove = function(e) {
-			if (!bigimg) return;
-			var x = e.offsetX / bigimg.width;
-			var y = (e.offsetY / 3 | 0) % all.length;
-			if (lasty === undefined) lasty = y;
+			// if (!bigimg) return;
+			// var x = e.offsetX / bigimg.width;
+			// var y = (e.offsetY / 3 | 0) % all.length;
+			// if (lasty === undefined) lasty = y;
 
-			// var s = styles[x * styles.length | 0];
+			// // var s = styles[x * styles.length | 0];
 
-			tmp = bigimg.classList[1];
+			// tmp = bigimg.classList[1];
 
-			// bigimg.classList.remove(tmp);
-			// bigimg.classList.add(s);
+			// // bigimg.classList.remove(tmp);
+			// // bigimg.classList.add(s);
 
-			// bigimg.style.cssText = 'clip: rect(auto auto auto ' + (e.offsetX | 0) + 'px)';
+			// // bigimg.style.cssText = 'clip: rect(auto auto auto ' + (e.offsetX | 0) + 'px)';
 
-			if (lasty != y) {
-				// previewBig(all[y]);
-				lasty = y;
-			}
+			// if (lasty != y) {
+			// 	// previewBig(all[y]);
+			// 	lasty = y;
+			// }
 		}
 
 		img.onmouseout = function(e) {
@@ -274,11 +271,9 @@
 			switchStyle(save);
 		}
 
-		function previewBig(img, i) {
-			currentImage = img;
-			var thumbnails = i === 0;
-			if (filenames)
-				selectedFile = filenames[i];
+		function previewBig(img, thumbnails, photo) {
+			selectedPhoto = photo;
+
 			img = scaleImage(img, 590);
 
 			var child;
@@ -286,16 +281,7 @@
 				child.remove();
 			}
 
-			// original
-			// var n = document.createElement('figure');
-			// n.appendChild(img.cloneNode());
-			// n.classList.remove(n.classList[0]);
-			// n.classList.remove(n.classList[0]);
-			// n.classList.add('orig');
-			// big.appendChild(n);
 
-			//
-			// big.innerHTML = '<image x="0" y="0" width="275" height="95" xlink:href="' + img.src + '" />'
 			n = document.createElement('figure');
 			n.appendChild(img.cloneNode());
 			// n.classList.remove(n.classList[0]);
@@ -316,7 +302,7 @@
 			styles.forEach(function(s) {
 				var m = filterItems.get(s).querySelector('figure');
 
-				while (child = m.childNodes[0]) {
+				while (child = m.firstChild) {
 					child.remove();
 				}
 
@@ -356,16 +342,26 @@
 			return canvas;
 		}
 
-		function processImage(oImg, i) {
+		// var filenames = [];
+		// filenames.push(files[i].path);
+		// localStorage.lastLoad = JSON.stringify(filenames);
+		// console.log('Got Files', filenames);
+
+		function processImage(oImg, path, i) {
+
+			var photo = new Photo(path, oImg);
+			photos.add( photo );
+
 			// console.log('process image');
 
 			// var canvas = getCanvas(img, 550);
 			// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
-			previewBig(oImg, i);
 
-			img = scaleImage(oImg, 390);
+			if (photos.count() == 1) {
+				previewBig(oImg, true, photo);
+			}
 
-			all.push(img);
+			var img = scaleImage(oImg, 390);
 
 			var figure = document.createElement('figure');
 			figure.classList.add('pic');
@@ -375,7 +371,7 @@
 			preview.appendChild(figure);
 
 			img.onclick = function() {
-				previewBig(oImg, i);
+				previewBig(oImg, true, photo);
 			}
 
 		}

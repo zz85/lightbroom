@@ -101,24 +101,18 @@ function ImageOpener( processImage, target ) {
 	}
 
 	function dropBehavior(e) {
-		console.log('dropped', e);
+		console.log('Files are dropped', e);
 		e.stopPropagation();
 		e.preventDefault();
 		var files = e.dataTransfer.files;
 
-		var filenames = [];
-
 		if (files.length) {
 			for (var i = 0; i < files.length; i++) {
 				openFile(files[i], i);
-				filenames.push(files[i].path);
 			}
 		} else {
 			// TODO support copypaste/clipboard drag in
 		}
-
-		localStorage.lastLoad = JSON.stringify(filenames);
-		console.log('Got Files', filenames);
 	}
 
 	function openFile(file, i) {
@@ -126,10 +120,10 @@ function ImageOpener( processImage, target ) {
 			if (debug) console.log('image fail');
 			return;
 		}
-
+		
 		var reader = new FileReader();
 		reader.onloadend = function(e) {
-			loadImage(e, i)
+			loadImage(e, file.path, i);
 		};
 
 		reader.onerror = errorHandler;
@@ -152,17 +146,18 @@ function ImageOpener( processImage, target ) {
 		// reader.readAsDataURL(file);
 	}
 
-	function loadImage(e, i) {
+	function loadImage(e, path, i) {
 		var target = e.target;
 		// console.log('loadImage', e); // e, target, reader, e.target.result
-		var img = document.createElement("img");
 
-		var objectURL = URL.createObjectURL(new Blob([target.result]));
+		var blob = new Blob([target.result]);
+		var objectURL = URL.createObjectURL(blob);
+		
+		var img = document.createElement("img");
 		img.src = objectURL;
-		// img.src = target.result;
 
 		img.onload = function(e) {
-			processImage(img, i);
+			processImage(img, path, i);
 		};
 	}
 
