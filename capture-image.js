@@ -21,15 +21,22 @@ function load (photo, style, filename) { // size
 	figure.appendChild(img);
 
 	img.onload = () => {
-		console.timeEnd('load')
-		console.time('raf')
-		requestAnimationFrame(() => {
-			requestAnimationFrame(() => {
-				console.timeEnd('raf')
-				console.log(filename, img);
-				save(filename, img);
-			});
-		});
+		console.timeEnd('load');
+		console.time('raf');
+
+		var count = 0;
+		var wait = function() {
+			count++;
+			if (count < 3 || win.isLoading()) {
+				// not sure if this actually is useful.
+				// 'did-stop-loading'
+				return requestAnimationFrame(wait);
+			}
+			console.timeEnd('raf')
+			console.log(filename, img);
+			save(filename, img);
+		}
+		requestAnimationFrame(wait);
 	};
 
 	figure.className = style;
@@ -46,14 +53,17 @@ function save(filename, img) {
 	};
 	// console.log(o);
 
+	// win.show();
+	win.focus();
+
 	// caveat - bounds must entirely be inside chrome's viewport!!
 	win.capturePage(o, img => {
 		// console.log(img.getSize())
 		// fs.writeFileSync('screenshot.png', img.toPng());
 		fs.writeFileSync(filename, img.toJpeg(98));
-		// win.close();
+		win.close();
 
-		// could make an ipc call here instead.
-		electron.ipcRenderer.send('signal', 'done');
+		// // could make an ipc call here instead.
+		// electron.ipcRenderer.send('signal', 'done');
 	});
 }

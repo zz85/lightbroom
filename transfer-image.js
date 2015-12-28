@@ -95,22 +95,26 @@ if (typeof(global) === 'object') {
 			win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}')`);
 		}
 
-		function ok (sender, msg) {
-			console.log('image transferred', (Date.now() - start) / 1000);
+		// function ok (sender, msg) {
+		// 	console.log('image transferred', (Date.now() - start) / 1000);
 
-			remote.ipcMain.removeListener('signal', ok);
-
-			if (done) done();
-		}
-
-		remote.ipcMain.on('signal', ok);
-
-		// win.on('closed', function() {
-		// 	console.log('closed', (Date.now() - start) / 1000);
-		// 	win = null;
+		// 	remote.ipcMain.removeListener('signal', ok);
 
 		// 	if (done) done();
-		// });
+		// }
+
+		// remote.ipcMain.on('signal', ok);
+
+		win.on('closed', function() {
+			console.log('closed', (Date.now() - start) / 1000);
+			win = null;
+
+			if (done) {
+				done();
+			} else {
+				win.close();
+			}
+		});
 
 		//
 	}
