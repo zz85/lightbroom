@@ -14,6 +14,7 @@
 	<div id="drop">
 		<div id="toolbar">
 			<button onclick="saveImage()">Save Image</button>
+			<button onclick="saveAll()">Save All Images</button>
 			<!--<button>drop photos here.....</button>-->
 			drop photos here.....
 		</div>
@@ -379,68 +380,8 @@
 
 		}
 
-		if (typeof(global) === 'object') {
-			// check that we are in electron. then we cheat.
-			var lastLoad = localStorage.lastLoad;
-			if (lastLoad) {
-				filenames = JSON.parse(lastLoad);
-
-				filenames.forEach( (f, i) => {
-					console.log(f);
-					var now = Date.now();
-					var img = new Image();
-					img.src = f;
-					img.onload = function() {
-						console.log('loaded', Date.now() - now);
-						processImage(img, i);
-					}
-				} );
-
-			}
-
-			function saveImage() {
-				var electron = require('electron');
-				var remote = electron.remote;
-				var localScreen = electron.screen
-				var display = localScreen.getPrimaryDisplay().workAreaSize;
-
-				win = new remote.BrowserWindow ({
-					x: 0, // display.width
-					y: 0, // display.height
-					width: currentImage.naturalWidth + 500 * 1,
-					height: currentImage.naturalHeight + 500 * 1,
-					// resizable: false,
-					'skip-taskbar': true,
-					show: false,
-					'enable-larger-than-screen': true
-				});
-
-				win.loadURL(`file://${__dirname}/capture-image.html`);
-
-				var out = selectedFile.split('/').pop();
-				console.log('saving image', selectedFile, currentStyle, out);
-
-				 win.webContents.on('did-finish-load', function() {
-					 console.log('did-finish-load')
-					// window.webContents.send('ping', 'whoooooooh!');
-					win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${__dirname}/captures/${out}')`);
-				});
-
-				win.webContents.on('dom-ready', function() {
-					console.log('dom-ready')
-				});
-
-
-
-
-				//
-
-
-
-			}
-		}
-
 	</script>
+	<script src="transfer-image.js"></script>
 
 </body>
 </html>
