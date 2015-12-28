@@ -44,18 +44,16 @@ function save(filename, img) {
 		width: b.width,
 		height: b.height
 	};
-
 	// console.log(o);
-	// win.show();
-	// win.focus();
 
 	// caveat - bounds must entirely be inside chrome's viewport!!
-	// to capture this offscreen, see https://github.com/atom/electron/issues/2610
-	// some how this is not required in chrome 35
 	win.capturePage(o, img => {
 		// console.log(img.getSize())
 		// fs.writeFileSync('screenshot.png', img.toPng());
 		fs.writeFileSync(filename, img.toJpeg(98));
-		win.close();
+		// win.close();
+
+		// could make an ipc call here instead.
+		electron.ipcRenderer.send('signal', 'done');
 	});
 }
