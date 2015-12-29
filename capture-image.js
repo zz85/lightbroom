@@ -37,7 +37,7 @@ function load (photo, style, filename, longest, orientation) {
 		// 	figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
 		// }
 
-		if (orientation) {
+		if (orientation > 1) {
 			let b = img.getBoundingClientRect();
 			console.log(b);
 
