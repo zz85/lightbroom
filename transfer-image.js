@@ -7,16 +7,41 @@ if (typeof(global) === 'object') {
 		var filenames = JSON.parse(lastLoad);
 		// TODO move this to PhotoList deserializer
 
-		filenames.forEach( (f, i) => {
-			console.log('Previously loaded', f);
-			var now = Date.now();
+		var now = Date.now();
+		filenames.forEach( (filename, i) => {
+			console.log('Previously loaded', filename);
+
 			var img = new Image();
-			img.src = 'file://' + f;
+			img.src = 'file://' + filename;
 			img.onload = function() {
+				console.log(img.complete);
 				console.log('loaded', Date.now() - now);
-				processImage(img, f, i);
+				processImage(img, filename, i);
 			}
 		} );
+
+		// var fs = require('fs');
+
+		// filenames.forEach( (filename, i) => {
+		// 	// var buffer = fs.readFileSync(filename);
+
+		// 	fs.readFile(filename, function(err, buffer) {;
+		// 		var now = Date.now();
+
+		// 		// console.log(EXIF.readFromBinaryFile(buffer.buffer));
+
+		// 		var blob = new Blob([buffer]);
+		// 		var objectURL = URL.createObjectURL(blob);
+
+		// 		var img = document.createElement("img");
+		// 		img.src = objectURL;
+
+		// 		img.onload = function() {
+		// 			console.log('loaded', Date.now() - now);
+		// 			processImage(img, filename, i);
+		// 		}
+		// 	})
+		// });
 	}
 
 	function saveImage() {

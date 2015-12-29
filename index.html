@@ -7,7 +7,7 @@
 	<script src="ImageOpener.js"></script>
 	<script src="photo.js"></script>
 	<script src="node_modules/exif-js/exif.js"></script>
-	
+
 
 	<div id="filters"></div>
 	<div id="peeks"></div>
@@ -362,10 +362,17 @@
 
 		function processImage(oImg, path, i) {
 			// console.log('tags', EXIF.getAllTags(oImg));
-			EXIF.getData(oImg, function() {
-				console.log(oImg.exifdata);
-			});
-			
+			// EXIF.getData(oImg, function() {
+			// 	console.log(oImg.exifdata);
+			// });
+
+			var buffer = require('fs').readFileSync(path);
+			console.log(EXIF.readFromBinaryFile(buffer.buffer));
+
+			// var buffer = require('fs').readFile(path, (err, buffer) => {
+			// console.log(EXIF.readFromBinaryFile(buffer.buffer));
+			// });
+
 			// horrible hack. why do we even need this!?
 			requestAnimationFrame( () => {
 				processImage2(oImg, path, i);

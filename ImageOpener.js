@@ -12,8 +12,9 @@ function ImageOpener( processImage, target ) {
 	// Check for the various File API support.
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
 		// Great success! All the File APIs are supported.
+		window.URL = window.URL || window.webkitURL;
 	} else {
-		alert('The File APIs are not fully supported in this browser.');
+		return console.error('The File APIs are not fully supported in this browser.');
 	}
 
 	target = target || document.body;
@@ -56,8 +57,7 @@ function ImageOpener( processImage, target ) {
 			if (items[i].kind == 'file' &&
 			items[i].type.indexOf('image/') !== -1) {
 				var blob = items[i].getAsFile();
-				window.URL = window.URL || window.webkitURL;
-				var blobUrl = window.URL.createObjectURL(blob);
+				var blobUrl = URL.createObjectURL(blob);
 
 				var img = document.createElement('img');
 				img.src = blobUrl;
@@ -147,12 +147,12 @@ function ImageOpener( processImage, target ) {
 	}
 
 	function loadImage(e, path, i) {
-		var target = e.target;
+		var arraybuffer = e.target.result;
 		// console.log('loadImage', e); // e, target, reader, e.target.result
 		
-		console.log(EXIF.readFromBinaryFile(target.result));
+		// console.log(EXIF.readFromBinaryFile(arraybuffer));
 
-		var blob = new Blob([target.result]);
+		var blob = new Blob([arraybuffer]);
 		var objectURL = URL.createObjectURL(blob);
 		
 		var img = document.createElement("img");
