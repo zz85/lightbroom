@@ -1,14 +1,22 @@
 Lightbroom
 --
 
-Making the photo editing workflow a breeze.
+Back in 2003, I created [this repostory](https://github.com/zz85/lightbroom/commit/124270abe79588366e7bd041f32851aa548ddbc9) because I had some wild ideas of building a better replacement to my lightroom workflow... (yeah it is never that easy but one can always have dreams...)
 
-Not that I'm against Lightroom, but my biggest disappointment is with its sluggishness. It has improved, but my poor (maybe old) desktop churns using it, and doesn't utilize that powerful GPU I bought specially to do graphics.
+## Current State
 
-[Bret Victor says](http://vimeo.com/36579366) that our tools should have an immediate connection with us, and I feel such delays drains the energy, creativity and drive from me.
+An Instagram-like desktop app developed with Electron and Web technologies for a simple photo retouching workflow.
+This iteration currently uses [CSSgram](https://github.com/una/CSSgram/) (which uses GPU accelerated CSS filters and blend modes) for instgram like filters.
 
-Yes, this could be vapourware this point of time, but I'm using this to let go of my steam after I lost couple of hours work with my photo editing last night.
+![screenshot 2015-12-30 04 36 58](https://cloud.githubusercontent.com/assets/314997/12041835/1473add4-aeb0-11e5-8a52-85bd959d062c.png)
 
-If I were to work on this, it'd be webgl and node.js based. If you really like to see this, then you should let me know [on twitter](https://twitter.com/BlurSpline).
+![lightbroom1](https://cloud.githubusercontent.com/assets/314997/12041841/282d7f62-aeb0-11e5-841b-726cc98bae1c.gif)
 
-Hope you had a good laugh, and have a nice day!
+## Current Features
+
+- Drag drop photos
+- Mass preview and apply filters
+- Mass export
+
+## Contact
+[@blurspline](http://twitter.com/blurspline)
