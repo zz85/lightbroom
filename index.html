@@ -131,8 +131,15 @@
 		}
 
 		#preview {
+			/* Film Strip */
 			/*display: flex;
 			overflow: scroll;*/
+
+			height: 39%;
+			position: absolute;
+			overflow: auto;
+			bottom: 0;
+			border-top: 1px solid #999;
 		}
 
 	</style>
@@ -351,6 +358,13 @@
 		// console.log('Got Files', filenames);
 
 		function processImage(oImg, path, i) {
+			// horrible hack. why do we even need this!?
+			requestAnimationFrame( () => {
+				processImage2(oImg, path, i);
+			});
+		}
+
+		function processImage2(oImg, path, i) {
 
 			var photo = new Photo(path, oImg);
 			photos.add( photo );

@@ -11,7 +11,7 @@ if (typeof(global) === 'object') {
 			console.log('Previously loaded', f);
 			var now = Date.now();
 			var img = new Image();
-			img.src = f;
+			img.src = 'file://' + f;
 			img.onload = function() {
 				console.log('loaded', Date.now() - now);
 				processImage(img, f, i);
