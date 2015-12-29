@@ -98,7 +98,7 @@ if (typeof(global) === 'object') {
 		var start = Date.now();
 
 		var longest = Math.max(currentImage.naturalWidth || 0, currentImage.natualHeight || 0);
-		longest = 800;
+		if (longside.value) longest = longside.value | 0;
 
 		var width = currentImage.naturalWidth + 500 * 1;
 		var height = currentImage.naturalHeight + 500 * 1;
@@ -121,7 +121,7 @@ if (typeof(global) === 'object') {
 				height: height,
 				// resizable: false,
 				'skip-taskbar': true,
-				// show: false,
+				show: false,
 				'enable-larger-than-screen': true
 			});
 

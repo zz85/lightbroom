@@ -16,10 +16,12 @@
 
 	<div id="drop">
 		<div id="toolbar">
-			<button onclick="saveImage()">Save Image</button>
-			<button onclick="saveAll()">Save All Images</button>
-			<!--<button>drop photos here.....</button>-->
+			<!--<button>browse photos here.....</button>-->
 			<span class="txt-drag-your-photos-here">drop photos here.....
+				<button onclick="saveImage()">Save Image</button>
+				<button onclick="saveAll()">Save All Images</button>
+				
+				Long side: <input id="longside" type="text" size="5" value="" style="background: none; color: #fff;" placeholder="auto"/>
 				<!--[ Select Target Folder ] [ Output Size ][ Output Posfix ]-->
 			</span>
 		</div>
