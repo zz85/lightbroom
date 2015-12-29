@@ -35,9 +35,10 @@ PhotoList.prototype.save = function() {
 	localStorage.lastLoad = JSON.stringify(this.filenames());
 }
 
-function Photo(filename, img) {
+function Photo(filename, img, orientation) {
 	this.filename = filename;
 	this.img = img;
+	this.orientation = orientation;
 
 	// styles
 	// adjustments

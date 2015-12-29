@@ -91,17 +91,34 @@ if (typeof(global) === 'object') {
 
 		var selectedFile = photo.filename;
 		var currentImage = photo.img;
+		var orientation = photo.orientation;
 
 		var localScreen = electron.screen
 		// var display = localScreen.getPrimaryDisplay().workAreaSize;
 		var start = Date.now();
 
+		var longest = Math.max(currentImage.naturalWidth || 0, currentImage.natualHeight || 0);
+		longest = 800;
+
+		var width = currentImage.naturalWidth + 500 * 1;
+		var height = currentImage.naturalHeight + 500 * 1;
+
+		// var shift =
+		if (orientation > 4) {
+			var t = width;
+			width = height;
+			height = t;
+		}
+
+		width = longest + 200;
+		height = longest + 200;
+
 		if (!win) {
 			win = new remote.BrowserWindow ({
 				x: 0, // display.width
 				y: 0, // display.height
-				width: currentImage.naturalWidth + 500 * 1,
-				height: currentImage.naturalHeight + 500 * 1,
+				width: width,
+				height: height,
 				// resizable: false,
 				'skip-taskbar': true,
 				// show: false,
@@ -114,10 +131,10 @@ if (typeof(global) === 'object') {
 			win.webContents.on('did-finish-load', function() {
 				console.log('did-finish-load')
 				// window.webContents.send('ping', 'whoooooooh!');
-				win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}', 800)`);
+				win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}', ${longest}, ${orientation})`);
 			});
 		} else {
-			win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}', 800)`);
+			win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}', ${longest}, ${orientation})`);
 		}
 
 		// function ok (sender, msg) {

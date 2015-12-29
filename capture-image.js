@@ -8,27 +8,57 @@ const fs = require('fs');
 let win = remote.getCurrentWindow();
 
 var figure = document.getElementById('figure');
-function load (photo, style, filename, longest) {
+function load (photo, style, filename, longest, orientation) {
 	while (figure.firstChild) {
 		figure.removeChild(figure.firstChild);
 	}
 
 	console.time('load');
-	
+
 	if (longest) figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
 
 	var img = new Image();
 	img.src = photo;
+
 	figure.appendChild(img);
+	figure.className = style;
+
+	console.log('orientation', arguments);
+
+	if (orientation) figure.classList.add(`orientation${orientation}`);
+
 
 	img.onload = () => {
 		console.timeEnd('load');
 		console.time('raf');
-		
-		if (!longest) {
-			longest = 'auto';
-			figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
-		}	
+
+		// if (!longest) {
+		// 	longest = 'auto';
+		// 	figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
+		// }
+
+		if (orientation) {
+			let b = img.getBoundingClientRect();
+			console.log(b);
+
+			figure.style.cssText += `
+				transform:
+					translateX(${-b.left}px)
+					translateY(${-b.top}px)
+					rotate(-90deg)
+
+					;
+			`;
+			// if (b.width > b.height) {
+			// 	var diff = b.height - b.width / 2;
+			// 	figure.style.cssText += `
+			// 		transform:
+			// 			translateY(${diff}px)
+			// 			translateX(${-diff}px)
+			// 			rotate(-90deg);
+			// 	`;
+			// }
+		}
 
 		var count = 0;
 		var wait = function() {
@@ -44,8 +74,6 @@ function load (photo, style, filename, longest) {
 		}
 		requestAnimationFrame(wait);
 	};
-
-	figure.className = style;
 }
 
 function save(filename, img) {
@@ -58,11 +86,15 @@ function save(filename, img) {
 		height: b.height
 	};
 
+	console.log(o);
+
 	// caveat - bounds must entirely be inside chrome's viewport!!
 	win.capturePage(o, img => {
 		// console.log(img.getSize())
 		// fs.writeFileSync('screenshot.png', img.toPng());
 		fs.writeFileSync(filename, img.toJpeg(98));
+
+		// turn this off if you need debugging
 		win.close();
 
 		// // could make an ipc call here instead.

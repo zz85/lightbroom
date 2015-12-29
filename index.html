@@ -32,7 +32,7 @@
 
 	<!--
 		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
-		
+
 		TODO
 		1. Photo rotation (transform in canvas, pass css transform)
 		2. Output size (easy, can use css for now)
@@ -251,24 +251,8 @@
 		}
 
 		img.onmousemove = function(e) {
-			// if (!bigimg) return;
-			// var x = e.offsetX / bigimg.width;
-			// var y = (e.offsetY / 3 | 0) % all.length;
-			// if (lasty === undefined) lasty = y;
-
-			// // var s = styles[x * styles.length | 0];
-
-			// tmp = bigimg.classList[1];
-
-			// // bigimg.classList.remove(tmp);
-			// // bigimg.classList.add(s);
-
-			// // bigimg.style.cssText = 'clip: rect(auto auto auto ' + (e.offsetX | 0) + 'px)';
-
-			// if (lasty != y) {
-			// 	// previewBig(all[y]);
-			// 	lasty = y;
-			// }
+			// code here to reimplement scrubbing behaviour
+			// (potatoe prototype6)
 		}
 
 		img.onmouseout = function(e) {
@@ -283,31 +267,23 @@
 			switchStyle(save);
 		}
 
-		function previewBig(img, thumbnails, photo) {
+		function previewBig(img, photo, orientation) {
 			selectedPhoto = photo;
 
-			img = scaleImage(img, 590);
+			img = scaleImage(img, 590, orientation);
 
 			var child;
 			while (child = big.childNodes[0]) {
 				child.remove();
 			}
 
-
 			n = document.createElement('figure');
 			n.appendChild(img.cloneNode());
-			// n.classList.remove(n.classList[0]);
-			// n.classList.remove(n.classList[0]);
 			n.classList.add('big');
 			n.classList.add(currentStyle);
 			bigimg = n;
 
 			big.appendChild(n);
-
-			// big.style.width = n.width + 'px';
-			// big.style.height = n.height + 'px';
-
-			if (!thumbnails) return;
 
 			img = scaleImage(img, maxLength);
 
@@ -330,8 +306,8 @@
 
 		}
 
-		function scaleImage(img, maxLength) {
-			var canvas = getCanvas(img, maxLength);
+		function scaleImage(img, maxLength, orientation) {
+			var canvas = getCanvas(img, maxLength, orientation);
 
 			var image = new Image();
 			image.src = canvas.toDataURL("image/png");
@@ -339,10 +315,10 @@
 			return image;
 		}
 
-		function getCanvas(img, maxLength) {
+		function getCanvas(img, maxLength, orientation) {
 			var imgWidth = img.naturalWidth;
 			var imgHeight = img.naturalHeight;
-			
+
 			// can rotate here....
 
 			var scale = imgWidth > imgHeight ? maxLength / imgWidth : maxLength / imgHeight;
@@ -352,8 +328,56 @@
 
 			var targetWidth = imgWidth * scale;
 			var targetHeight = imgHeight * scale;
+
 			canvas.width = targetWidth;
 			canvas.height = targetHeight;
+			if (orientation > 4) {
+				canvas.width = targetHeight;
+				canvas.height = targetWidth;
+			}
+
+			var width = targetWidth;
+			var height = targetHeight;
+
+			switch (orientation) {
+				case 2:
+					// horizontal flip
+					ctx.translate(width, 0);
+					ctx.scale(-1, 1);
+					break;
+				case 3:
+					// 180° rotate left
+					ctx.translate(width, height);
+					ctx.rotate(Math.PI);
+					break;
+				case 4:
+					// vertical flip
+					ctx.translate(0, height);
+					ctx.scale(1, -1);
+					break;
+				case 5:
+					// vertical flip + 90 rotate right
+					ctx.rotate(0.5 * Math.PI);
+					ctx.scale(1, -1);
+					break;
+				case 6:
+					// 90° rotate right
+					ctx.rotate(0.5 * Math.PI);
+					ctx.translate(0, -height);
+					break;
+				case 7:
+					// horizontal flip + 90 rotate right
+					ctx.rotate(0.5 * Math.PI);
+					ctx.translate(width, -height);
+					ctx.scale(-1, 1);
+					break;
+				case 8:
+					// 90° rotate left
+					ctx.rotate(-0.5 * Math.PI);
+					ctx.translate(-width, 0);
+					break;
+			}
+
 			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
 			return canvas;
@@ -367,14 +391,13 @@
 		function processImage(oImg, path, i) {
 			EXIF.getData(oImg, function() {
 				var exif = EXIF.getAllTags(oImg);
-				console.log(exif.Orientation);
 				processImage2(oImg, path, i, exif);
 			});
 		}
 
 		function processImage2(oImg, path, i, exif) {
-
-			var photo = new Photo(path, oImg);
+			var orientation = exif.Orientation;
+			var photo = new Photo(path, oImg, orientation);
 			photos.add( photo );
 
 			// console.log('process image');
@@ -382,11 +405,13 @@
 			// var canvas = getCanvas(img, 550);
 			// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
 
+
+
 			if (photos.count() == 1) {
-				previewBig(oImg, true, photo);
+				previewBig(oImg, photo, orientation);
 			}
 
-			var img = scaleImage(oImg, 390);
+			var img = scaleImage(oImg, 390, orientation);
 
 			var figure = document.createElement('figure');
 			figure.classList.add('pic');
@@ -396,7 +421,7 @@
 			preview.appendChild(figure);
 
 			img.onclick = function() {
-				previewBig(oImg, true, photo);
+				previewBig(oImg, photo, orientation);
 			}
 
 		}
