@@ -1,13 +1,13 @@
 {
   "name": "lightbroom",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "photo workflow software",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-     "bumpcssgram": "rm cssgram.min.css && wget https://github.com/una/CSSgram/raw/master/site/css/cssgram.min.css"
+    "bumpcssgram": "rm cssgram.min.css && wget https://github.com/una/CSSgram/raw/master/site/css/cssgram.min.css"
   },
   "repository": {
     "type": "git",
