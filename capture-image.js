@@ -13,9 +13,9 @@ function load (photo, style, filename, longest) {
 		figure.removeChild(figure.firstChild);
 	}
 
-	figure.style.cssText = `max-width: ${longest}; max-height: ${longest}`;
-
 	console.time('load');
+	
+	if (longest) figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
 
 	var img = new Image();
 	img.src = photo;
@@ -24,6 +24,11 @@ function load (photo, style, filename, longest) {
 	img.onload = () => {
 		console.timeEnd('load');
 		console.time('raf');
+		
+		if (!longest) {
+			longest = 'auto';
+			figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
+		}	
 
 		var count = 0;
 		var wait = function() {
@@ -46,16 +51,12 @@ function load (photo, style, filename, longest) {
 function save(filename, img) {
 	let b = img.getBoundingClientRect();
 
-	var o = {
+	let o = {
 		x: b.left,
 		y: b.top,
 		width: b.width,
 		height: b.height
 	};
-	// console.log(o);
-
-	// win.show();
-	win.focus();
 
 	// caveat - bounds must entirely be inside chrome's viewport!!
 	win.capturePage(o, img => {

@@ -114,10 +114,10 @@ if (typeof(global) === 'object') {
 			win.webContents.on('did-finish-load', function() {
 				console.log('did-finish-load')
 				// window.webContents.send('ping', 'whoooooooh!');
-				win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}')`);
+				win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}', 800)`);
 			});
 		} else {
-			win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}')`);
+			win.webContents.executeJavaScript(`load('${selectedFile}', '${currentStyle}', '${out}', 800)`);
 		}
 
 		// function ok (sender, msg) {
