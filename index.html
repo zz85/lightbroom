@@ -328,13 +328,16 @@
 		}
 
 		function getCanvas(img, maxLength) {
-			var scale = img.width > img.height ? maxLength / img.width : maxLength / img.height;
+			var imgWidth = img.naturalWidth;
+			var imgHeight = img.naturalHeight;
+
+			var scale = imgWidth > imgHeight ? maxLength / imgWidth : maxLength / imgHeight;
 
 			var canvas = document.createElement('canvas');
 			var ctx = canvas.getContext('2d');
 
-			var targetWidth = img.width * scale;
-			var targetHeight = img.height * scale;
+			var targetWidth = imgWidth * scale;
+			var targetHeight = imgHeight * scale;
 			canvas.width = targetWidth;
 			canvas.height = targetHeight;
 			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
