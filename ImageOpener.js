@@ -149,8 +149,6 @@ function ImageOpener( processImage, target ) {
 	function loadImage(e, path, i) {
 		var arraybuffer = e.target.result;
 		// console.log('loadImage', e); // e, target, reader, e.target.result
-		
-		// console.log(EXIF.readFromBinaryFile(arraybuffer));
 
 		var blob = new Blob([arraybuffer]);
 		var objectURL = URL.createObjectURL(blob);

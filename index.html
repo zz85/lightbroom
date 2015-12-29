@@ -361,20 +361,9 @@
 		// console.log('Got Files', filenames);
 
 		function processImage(oImg, path, i) {
-			// console.log('tags', EXIF.getAllTags(oImg));
-			// EXIF.getData(oImg, function() {
-			// 	console.log(oImg.exifdata);
-			// });
-
-			var buffer = require('fs').readFileSync(path);
-			console.log(EXIF.readFromBinaryFile(buffer.buffer));
-
-			// var buffer = require('fs').readFile(path, (err, buffer) => {
-			// console.log(EXIF.readFromBinaryFile(buffer.buffer));
-			// });
-
-			// horrible hack. why do we even need this!?
-			requestAnimationFrame( () => {
+			EXIF.getData(oImg, function() {
+				var exif = EXIF.getAllTags(oImg);
+				console.log(exif);
 				processImage2(oImg, path, i);
 			});
 		}

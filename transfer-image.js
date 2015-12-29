@@ -19,29 +19,6 @@ if (typeof(global) === 'object') {
 				processImage(img, filename, i);
 			}
 		} );
-
-		// var fs = require('fs');
-
-		// filenames.forEach( (filename, i) => {
-		// 	// var buffer = fs.readFileSync(filename);
-
-		// 	fs.readFile(filename, function(err, buffer) {;
-		// 		var now = Date.now();
-
-		// 		// console.log(EXIF.readFromBinaryFile(buffer.buffer));
-
-		// 		var blob = new Blob([buffer]);
-		// 		var objectURL = URL.createObjectURL(blob);
-
-		// 		var img = document.createElement("img");
-		// 		img.src = objectURL;
-
-		// 		img.onload = function() {
-		// 			console.log('loaded', Date.now() - now);
-		// 			processImage(img, filename, i);
-		// 		}
-		// 	})
-		// });
 	}
 
 	function saveImage() {
