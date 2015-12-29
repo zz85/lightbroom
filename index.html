@@ -32,6 +32,10 @@
 
 	<!--
 		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
+		
+		TODO
+		1. Photo rotation (transform in canvas, pass css transform)
+		2. Output size (easy, can use css for now)
 	-->
 
 	<style>
@@ -149,8 +153,6 @@
 	</style>
 
 	<script>
-		// TODO
-		// 1. Photo rotation
 
 		var opener = new ImageOpener(processImage);
 		var count = 0;
@@ -340,6 +342,8 @@
 		function getCanvas(img, maxLength) {
 			var imgWidth = img.naturalWidth;
 			var imgHeight = img.naturalHeight;
+			
+			// can rotate here....
 
 			var scale = imgWidth > imgHeight ? maxLength / imgWidth : maxLength / imgHeight;
 
@@ -363,12 +367,12 @@
 		function processImage(oImg, path, i) {
 			EXIF.getData(oImg, function() {
 				var exif = EXIF.getAllTags(oImg);
-				console.log(exif);
-				processImage2(oImg, path, i);
+				console.log(exif.Orientation);
+				processImage2(oImg, path, i, exif);
 			});
 		}
 
-		function processImage2(oImg, path, i) {
+		function processImage2(oImg, path, i, exif) {
 
 			var photo = new Photo(path, oImg);
 			photos.add( photo );

@@ -7,18 +7,42 @@ if (typeof(global) === 'object') {
 		var filenames = JSON.parse(lastLoad);
 		// TODO move this to PhotoList deserializer
 
-		var now = Date.now();
-		filenames.forEach( (filename, i) => {
-			console.log('Previously loaded', filename);
+		// var now = Date.now();
+		// filenames.forEach( (filename, i) => {
+		// 	console.log('Previously loaded', filename);
 
-			var img = new Image();
-			img.src = 'file://' + filename;
-			img.onload = function() {
-				console.log(img.complete);
-				console.log('loaded', Date.now() - now);
-				processImage(img, filename, i);
-			}
-		} );
+		// 	var img = new Image();
+		// 	img.src = 'file://' + filename;
+		// 	img.onload = function() {
+		// 		console.log('loaded', Date.now() - now);
+		// 		processImage(img, filename, i);
+		// 	}
+		// } );
+
+		var fs = require('fs');
+
+		filenames.forEach( (filename, i) => {
+		     var buffer = fs.readFileSync(filename);
+
+			// fs.readFile(filename, function(err, buffer) {;
+				var now = Date.now();
+				var img = document.createElement("img");
+				//  img.src = objectURL;
+
+				console.time('exif')
+				var exif = EXIF.readFromBinaryFile(buffer.buffer);
+				console.timeEnd('exif')
+
+				img.src = filename;
+
+				img.exifdata = exif;
+
+				img.onload = function() {
+					console.log('loaded', Date.now() - now);
+					processImage(img, filename, i);
+				}
+		     })
+		// });
 	}
 
 	function saveImage() {
@@ -80,7 +104,7 @@ if (typeof(global) === 'object') {
 				height: currentImage.naturalHeight + 500 * 1,
 				// resizable: false,
 				'skip-taskbar': true,
-				show: false,
+				// show: false,
 				'enable-larger-than-screen': true
 			});
 

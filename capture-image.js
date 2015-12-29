@@ -8,10 +8,12 @@ const fs = require('fs');
 let win = remote.getCurrentWindow();
 
 var figure = document.getElementById('figure');
-function load (photo, style, filename) { // size
+function load (photo, style, filename, longest) {
 	while (figure.firstChild) {
 		figure.removeChild(figure.firstChild);
 	}
+
+	figure.style.cssText = `max-width: ${longest}; max-height: ${longest}`;
 
 	console.time('load');
 
