@@ -6,6 +6,8 @@
 	<link rel="stylesheet" href="cssgram.min.css">
 	<script src="ImageOpener.js"></script>
 	<script src="photo.js"></script>
+	<script src="node_modules/exif-js/exif.js"></script>
+	
 
 	<div id="filters"></div>
 	<div id="peeks"></div>
@@ -17,7 +19,9 @@
 			<button onclick="saveImage()">Save Image</button>
 			<button onclick="saveAll()">Save All Images</button>
 			<!--<button>drop photos here.....</button>-->
-			drop photos here.....
+			<span class="txt-drag-your-photos-here">drop photos here.....
+				<!--[ Select Target Folder ] [ Output Size ][ Output Posfix ]-->
+			</span>
 		</div>
 
 		<div id="big"></div>
@@ -270,7 +274,6 @@
 			tmp = bigimg.classList[1];
 			bigimg.classList.remove(tmp);
 			bigimg.classList.add(currentStyle);
-
 		}
 
 		img.onmousedown = function(e) {
@@ -358,6 +361,11 @@
 		// console.log('Got Files', filenames);
 
 		function processImage(oImg, path, i) {
+			// console.log('tags', EXIF.getAllTags(oImg));
+			EXIF.getData(oImg, function() {
+				console.log(oImg.exifdata);
+			});
+			
 			// horrible hack. why do we even need this!?
 			requestAnimationFrame( () => {
 				processImage2(oImg, path, i);
