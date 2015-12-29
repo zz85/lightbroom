@@ -1,3 +1,6 @@
+var saveTo = document.getElementById('saveTo');
+var saveStatus = document.getElementById('status');
+
 // this file extends the web app with file system + electron capabilities
 
 if (typeof(global) === 'object') {
@@ -47,7 +50,8 @@ if (typeof(global) === 'object') {
 
 	function saveImage() {
 		var out = selectedPhoto.filename.split('/').pop();
-		out = `${__dirname}/captures/${out}`;
+		// out = `${__dirname}/captures/${out}`;
+		out = `${saveTo.innerHTML}/${out}`;
 		saveImageTo(selectedPhoto, currentStyle, out);
 	}
 
@@ -60,12 +64,15 @@ if (typeof(global) === 'object') {
 			var f = items.pop();
 			if (!f) {
 				console.log('Batch Done!', (Date.now() - start) / 1000);
+				saveStatus.innerHTML = 'Done!';
+				electron.shell.openItem(saveTo.innerHTML);
 				if (win) win.close();
 				return;
 			}
 
 			var out = f.filename.split('/').pop();
-			out = `${__dirname}/captures/${out}`;
+			// out = `${__dirname}/captures/${out}`;
+			out = `${saveTo.innerHTML}/${out}`;
 			saveImageTo(f, currentStyle, out, ok);
 		}
 
@@ -88,6 +95,7 @@ if (typeof(global) === 'object') {
 	}
 
 	function saveImageTo(photo, currentStyle, out, done) {
+		saveStatus.innerHTML = 'Exporting...';
 
 		var selectedFile = photo.filename;
 		var currentImage = photo.img;
@@ -158,4 +166,17 @@ if (typeof(global) === 'object') {
 
 		//
 	}
+
+
+	function outputFolder() {
+		var dialog = remote.dialog;
+		var moo = dialog.showOpenDialog(null, {
+			properties: ['openDirectory', 'createDirectory']
+		});
+
+		if (moo.length) saveTo.innerHTML = moo[0];
+
+		console.log(moo);
+	}
+	saveTo.innerHTML = __dirname;
 }

@@ -19,10 +19,14 @@
 			<!--<button>browse photos here.....</button>-->
 			<span class="txt-drag-your-photos-here">drop photos here.....
 				<button onclick="saveImage()">Save Image</button>
+				<br/>
+
+				<button onclick="outputFolder()">Output directory</button> <span id="saveTo"></span>
 				<button onclick="saveAll()">Save All Images</button>
-				
 				Long side: <input id="longside" type="text" size="5" value="" style="background: none; color: #fff;" placeholder="auto"/>
-				<!--[ Select Target Folder ] [ Output Size ][ Output Posfix ]-->
+
+				<span id="status"></span>
+				<!--[ Select Target Folder ] [ Output Size ][ Output Suffix ]-->
 			</span>
 		</div>
 
@@ -36,6 +40,10 @@
 		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
 
 		TODO
+		1. Save last target folder
+		2. Remove images
+
+		DONE
 		1. Photo rotation (transform in canvas, pass css transform)
 		2. Output size (easy, can use css for now)
 	-->
