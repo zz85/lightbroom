@@ -174,9 +174,12 @@ if (typeof(global) === 'object') {
 			properties: ['openDirectory', 'createDirectory']
 		});
 
-		if (moo.length) saveTo.innerHTML = moo[0];
+		if (moo.length) {
+			saveTo.innerHTML = moo[0];
+			localStorage.saveToLocation = moo[0];
+		}
 
 		console.log(moo);
 	}
-	saveTo.innerHTML = __dirname;
+	saveTo.innerHTML = localStorage.saveToLocation || __dirname;
 }
