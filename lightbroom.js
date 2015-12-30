@@ -156,7 +156,7 @@ function previewBig(img, photo, orientation) {
 		m.classList.add(s);
 
 	});
-	
+
 	sizeThumbnails(lastThumbnailSize);
 
 }
@@ -273,6 +273,8 @@ function processImage2(oImg, path, i, exif) {
 
 	preview.appendChild(figure);
 
+	figure.scrollIntoView(false, 200);
+
 	img.onclick = function() {
 		previewBig(oImg, photo, orientation);
 	}
@@ -290,7 +292,7 @@ function togglePreviewSlider() {
 			preview.style.height = '300px';
 			break;
 		case 2:
-			preview.style.height = '10px';		
+			preview.style.height = '10px';
 			break;
 	}
 
