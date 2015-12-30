@@ -7,34 +7,97 @@ const fs = require('fs');
 
 let win = remote.getCurrentWindow();
 
-let figure = document.getElementById('big').querySelector('figure')
-let b = figure.getBoundingClientRect()
-var o = {
-	x: b.left,
-	y: b.top,
-	width: b.width,
-	height: b.height
-};
+var figure = document.getElementById('figure');
+function load (photo, style, filename, longest, orientation) {
+	while (figure.firstChild) {
+		figure.removeChild(figure.firstChild);
+	}
 
-// caveat - bounds must entirely be inside chrome's viewport!!
-// to capture this offscreen, see https://github.com/atom/electron/issues/2610
-win.capturePage(o, img => {
-	console.log(img.getSize())
-	fs.writeFileSync('screenshot.png', img.toPng());
-	fs.writeFileSync('screenshot.jpg', img.toJpeg(100));
-});
+	console.time('load');
 
-// pdf capture
-let options = {
-	marginType: 0,
-	printBackground: true,
-	printSelectionOnly: false,
-	landscape: false
-};
+	if (longest) figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
 
-win.printToPDF(options, function (err, data) {
-	if (err) return console.error(err);
-	fs.writeFile('test.pdf', data, function (err) {
-		if (err) console.error(err);
+	var img = new Image();
+	img.src = photo;
+
+	figure.appendChild(img);
+	figure.className = style;
+
+	console.log('orientation', arguments);
+
+	if (orientation) figure.classList.add(`orientation${orientation}`);
+
+
+	img.onload = () => {
+		console.timeEnd('load');
+		console.time('raf');
+
+		// if (!longest) {
+		// 	longest = 'auto';
+		// 	figure.style.cssText = `max-width: ${longest}px; max-height: ${longest}px;`;
+		// }
+
+		if (orientation > 1) {
+			let b = img.getBoundingClientRect();
+			console.log(b);
+
+			figure.style.cssText += `
+				transform:
+					translateX(${-b.left}px)
+					translateY(${-b.top}px)
+					rotate(-90deg)
+
+					;
+			`;
+			// if (b.width > b.height) {
+			// 	var diff = b.height - b.width / 2;
+			// 	figure.style.cssText += `
+			// 		transform:
+			// 			translateY(${diff}px)
+			// 			translateX(${-diff}px)
+			// 			rotate(-90deg);
+			// 	`;
+			// }
+		}
+
+		var count = 0;
+		var wait = function() {
+			count++;
+			if (count < 3 || win.isLoading()) {
+				// not sure if this actually is useful.
+				// 'did-stop-loading'
+				return requestAnimationFrame(wait);
+			}
+			console.timeEnd('raf')
+			console.log(filename, img);
+			save(filename, img);
+		}
+		requestAnimationFrame(wait);
+	};
+}
+
+function save(filename, img) {
+	let b = img.getBoundingClientRect();
+
+	let o = {
+		x: b.left,
+		y: b.top,
+		width: b.width,
+		height: b.height
+	};
+
+	console.log(o);
+
+	// caveat - bounds must entirely be inside chrome's viewport!!
+	win.capturePage(o, img => {
+		// console.log(img.getSize())
+		// fs.writeFileSync('screenshot.png', img.toPng());
+		fs.writeFileSync(filename, img.toJpeg(98));
+
+		// turn this off if you need debugging
+		win.close();
+
+		// // could make an ipc call here instead.
+		// electron.ipcRenderer.send('signal', 'done');
 	});
-});
+}

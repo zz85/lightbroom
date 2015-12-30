@@ -1,5 +1,9 @@
-
-// Util Image Loader via HTML browser / drag and drop
+//
+// this is a simple image opener util file that supports
+// image loading via
+// 1. drag and drop
+// 2. browsing
+// 3. TODO clipboard paste
 // Load 3. Integration as JS file for demo
 
 function ImageOpener( processImage, target ) {
@@ -8,8 +12,9 @@ function ImageOpener( processImage, target ) {
 	// Check for the various File API support.
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
 		// Great success! All the File APIs are supported.
+		window.URL = window.URL || window.webkitURL;
 	} else {
-		alert('The File APIs are not fully supported in this browser.');
+		return console.error('The File APIs are not fully supported in this browser.');
 	}
 
 	target = target || document.body;
@@ -42,7 +47,6 @@ function ImageOpener( processImage, target ) {
 		}
 	}
 
-	var ii, iii;
 	function handlepaste (e) {
 		if (e && e.clipboardData && e.clipboardData.getData) {
 			// Webkit - get data from clipboard, put into editdiv, cleanup, then cancel event
@@ -53,8 +57,7 @@ function ImageOpener( processImage, target ) {
 			if (items[i].kind == 'file' &&
 			items[i].type.indexOf('image/') !== -1) {
 				var blob = items[i].getAsFile();
-				window.URL = window.URL || window.webkitURL;
-				var blobUrl = window.URL.createObjectURL(blob);
+				var blobUrl = URL.createObjectURL(blob);
 
 				var img = document.createElement('img');
 				img.src = blobUrl;
@@ -98,25 +101,18 @@ function ImageOpener( processImage, target ) {
 	}
 
 	function dropBehavior(e) {
-		console.log('dropped');
+		console.log('Files are dropped', e);
 		e.stopPropagation();
 		e.preventDefault();
-		console.log(e);
 		var files = e.dataTransfer.files;
-
-		var filenames = [];
 
 		if (files.length) {
 			for (var i = 0; i < files.length; i++) {
 				openFile(files[i], i);
-				filenames.push(files[i].path);
 			}
 		} else {
 			// TODO support copypaste/clipboard drag in
 		}
-
-		localStorage.lastLoad = JSON.stringify(filenames);
-		console.log('Got Files', filenames);
 	}
 
 	function openFile(file, i) {
@@ -124,10 +120,10 @@ function ImageOpener( processImage, target ) {
 			if (debug) console.log('image fail');
 			return;
 		}
-
+		
 		var reader = new FileReader();
 		reader.onloadend = function(e) {
-			loadImage(e, i)
+			loadImage(e, file.path, i);
 		};
 
 		reader.onerror = errorHandler;
@@ -150,17 +146,18 @@ function ImageOpener( processImage, target ) {
 		// reader.readAsDataURL(file);
 	}
 
-	function loadImage(e, i) {
-		var target = e.target;
+	function loadImage(e, path, i) {
+		var arraybuffer = e.target.result;
 		// console.log('loadImage', e); // e, target, reader, e.target.result
-		var img = document.createElement("img");
 
-		var objectURL = URL.createObjectURL(new Blob([target.result]));
+		var blob = new Blob([arraybuffer]);
+		var objectURL = URL.createObjectURL(blob);
+		
+		var img = document.createElement("img");
 		img.src = objectURL;
-		// img.src = target.result;
 
 		img.onload = function(e) {
-			processImage(img, i);
+			processImage(img, path, i);
 		};
 	}
 
