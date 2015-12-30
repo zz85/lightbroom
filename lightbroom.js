@@ -157,8 +157,6 @@ function previewBig(img, photo, orientation) {
 
 	});
 
-	sizeThumbnails(lastThumbnailSize);
-
 }
 
 function scaleImage(img, maxLength, orientation) {
@@ -276,14 +274,18 @@ function processImage2(oImg, path, i, exif) {
 	figure.scrollIntoView(false, 200);
 
 	img.onclick = function() {
+		togglePreviewSlider(1);
 		previewBig(oImg, photo, orientation);
 	}
+
+	sizeThumbnails(lastThumbnailSize);
 
 }
 var toggled = 0;
 
 /* Actions */
-function togglePreviewSlider() {
+function togglePreviewSlider(x) {
+	toggled =  x !== undefined ? x : toggled;
 	switch (toggled) {
 		case 0:
 			preview.style.height = '80%';
@@ -314,4 +316,24 @@ function sizeThumbnails(size) {
 			// d.style.maxHeight = `${size}px`;
 		}
 	)
+}
+
+function clearThumbnails() {
+	photos.empty();
+	location.reload();
+}
+
+var effectsTray = true;
+
+function toggleEffects() {
+	if (effectsTray) {
+		filters.style.height = '0px';
+		effectsTray = false;
+	} else {
+		filters.style.height = '128px';
+		effectsTray = true;
+	}
+
+
+
 }

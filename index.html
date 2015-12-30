@@ -22,21 +22,37 @@
 			<!--[ Select Target Folder ] [ Output Size ][ Output Suffix ]-->
 		</span>
 
-		<button onclick="togglePreviewSlider()">v</button>
-		<button onclick="sizeThumbnails(120)">S</button>
-		<button onclick="sizeThumbnails(240)">M</button>
-		<button onclick="sizeThumbnails(360)">L</button>
+		<div>
+			Filmstrip:
+			<button onclick="sizeThumbnails(120)">S</button>
+			<button onclick="sizeThumbnails(240)">M</button>
+			<button onclick="sizeThumbnails(360)">L</button>
+
+		</div>
+
+		<div class="txt-drag-your-photos-here" style="bottom: 0">
+			<button onclick="toggleEffects()">Effects</button>
+			Drag photos into the app to start.
+			<button onclick="clearThumbnails()">Clear</button>
+		</div>
 
     </div>
 
 	<div id="filters"></div>
 
-	<div id="peeks"></div>
+	<!--
+		NOT IN USE
+		<div id="peeks">
+		</div>
+	-->
 
 	<div id="sliders"></div>
 
 	<div id="drop">
-		<div id="big"></div>
+		<button onclick="togglePreviewSlider()" style="float:right;">v</button>
+		<div id="big">
+
+		</div>
 
 		<div id="preview">
 			<!-- film strip here -->
@@ -131,6 +147,7 @@
             box-shadow: 0px 1px 0px 0px rgba(255,255,255,0.30);
             padding: 14px;
             font-size: 13px;
+			transition: height 250ms;
 		}
 
 		button {
@@ -213,6 +230,7 @@
 			border-top: 1px solid #999;
 			transition: 350ms ease-out height;
 			background: #333;
+			z-index: 2;
 		}
 
 		#preview > figure > img {
