@@ -49,6 +49,10 @@ styles.forEach( function(s) {
 
 
 	b.onclick = function() {
+		var last = document.querySelector('.selected-effect');
+		if (last) last.classList.remove('selected-effect');
+		b.querySelector('img').classList.add('selected-effect');
+
 		saved = currentStyle;
 		switchStyle(s);
 	}
@@ -254,8 +258,6 @@ function processImage2(oImg, path, i, exif) {
 	// var canvas = getCanvas(img, 550);
 	// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
 
-
-
 	if (photos.count() == 1) {
 		previewBig(oImg, photo, orientation);
 	}
@@ -278,7 +280,6 @@ var toggled = 0;
 
 /* Actions */
 function togglePreviewSlider() {
-	
 	switch (toggled) {
 		case 0:
 			preview.style.height = '80%';
