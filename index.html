@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Lightbroom Preview</title>
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	</head>
 <body>
 	<link rel="stylesheet" href="cssgram.min.css">
@@ -8,16 +9,10 @@
 	<script src="photo.js"></script>
 	<script src="node_modules/exif-js/exif.js"></script>
 
-
-	<div id="filters"></div>
-	<div id="peeks"></div>
-
-	<div id="sliders"></div>
-
-	<div id="drop">
-		<div id="toolbar">
+    <div id="topbar">
+        <div id="toolbar">
 			<!--<button>browse photos here.....</button>-->
-			<span class="txt-drag-your-photos-here">drop photos here.....
+			<span class="txt-drag-your-photos-here">
 				<button onclick="saveImage()">Save Image</button>
 				<br/>
 
@@ -30,6 +25,14 @@
 			</span>
 		</div>
 
+    </div>
+	<div id="filters"></div>
+	<div id="peeks"></div>
+
+	<div id="sliders"></div>
+
+	<div id="drop">
+		
 		<div id="big"></div>
 
 		<br/>
@@ -51,10 +54,21 @@
 
 	<style>
 		body {
+            font-family: 'Lato', sans-serif;
 			background-color: #333740;
 			color: #ddd;
 			font-size: 13px;
+            margin: 0;
+            padding: 0;
 		}
+        
+        #topbar {
+            background: #555862;
+            box-shadow: 0px 1px 0px 0px #24272D;
+            width: 100%;
+            height: 50px;
+        }
+        
 		.pic {
 			max-height: 320px;
 			max-width: 320px;
@@ -78,30 +92,35 @@
 
 		.nofilter img {
 			width: 100%;
+            border-radius: 4px;
 		}
 
 		#filters {
 			display: flex;
-			border-bottom: 1px solid grey;
 			overflow: scroll;
+            background-color: #23262C;
+            box-shadow: 0px 1px 0px 0px rgba(255,255,255,0.30);
+            padding: 14px;
+            font-size: 13px;
 		}
 
 		button {
-			padding: 8px;
+            font-family: 'Lato', sans-serif;
+			padding: 10px;
 			margin: 4px 4px 14px 4px;
 			background-image: linear-gradient(-180deg, #7B7E87 0%, #555862 100%);
 			border: 1px solid #292B31;
 			box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.30), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.60);
 			border-radius: 4px;
 			color: #eaeaea;
+            font-size: 13px;
 		}
 
 		.effect {
-			width: 120px;
+			width: 130px;
 			display: block;
 			text-align: center;
 			font-weight: bold;
-			background: #111;
 			display: block;
 
 		}
@@ -175,26 +194,26 @@
 		var big = document.getElementById('big'), bigimg;
 
 		var styles = [
-			"nofilter",
-			"aden",
-			"inkwell",
-			"perpetua",
-			"reyes",
-			"gingham",
-			"toaster",
-			"walden",
-			"hudson",
-			"earlybird",
-			"mayfair",
-			"lofi",
+			"Nofilter",
+			"Aden",
+			"Inkwell",
+			"Perpetua",
+			"Reyes",
+			"Gingham",
+			"Toaster",
+			"Walden",
+			"Hudson",
+			"Earlybird",
+			"Mayfair",
+			"Lofi",
 			"_1977",
-			"brooklyn",
-			"xpro2",
-			"nashville",
-			"lark",
-			"moon",
-			"clarendon",
-			"willow"
+			"Brooklyn",
+			"Xpro2",
+			"Nashville",
+			"Lark",
+			"Moon",
+			"Clarendon",
+			"Willow"
 		];
 
 		var currentStyle = 'nofilter';
@@ -211,7 +230,7 @@
 
 			var b = document.createElement('b');
 			b.className = 'effect';
-			b.innerHTML = s;
+			
 
 			b.onclick = function() {
 				saved = currentStyle;
@@ -231,6 +250,7 @@
 
 			var figure = document.createElement('figure');
 			b.appendChild(figure);
+            b.innerHTML += s;
 
 			filterItems.set(s, div);
 			filters.appendChild(div);
