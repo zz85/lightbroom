@@ -274,19 +274,24 @@ function processImage2(oImg, path, i, exif) {
 	}
 
 }
-
-
-var toggled = false;
+var toggled = 0;
 
 /* Actions */
 function togglePreviewSlider() {
-	if (toggled) {
-		preview.style.height = '10px'; // '300px';
-	} else {
-		preview.style.height = '80%';
+	
+	switch (toggled) {
+		case 0:
+			preview.style.height = '80%';
+			break;
+		case 1:
+			preview.style.height = '300px';
+			break;
+		case 2:
+			preview.style.height = '10px';		
+			break;
 	}
 
-	toggled = !toggled;
+	toggled = (toggled + 1) % 3;
 }
 
 function sizeThumbnails(size) {
