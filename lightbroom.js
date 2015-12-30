@@ -156,6 +156,8 @@ function previewBig(img, photo, orientation) {
 		m.classList.add(s);
 
 	});
+	
+	sizeThumbnails(lastThumbnailSize);
 
 }
 
@@ -295,11 +297,19 @@ function togglePreviewSlider() {
 	toggled = (toggled + 1) % 3;
 }
 
+var lastThumbnailSize = 200;
 function sizeThumbnails(size) {
+	lastThumbnailSize = 200;
 	Array.from(document.querySelectorAll('#preview figure')).forEach(
 		d => {
-			d.style.maxWidth =`${size}px`;
-			d.style.maxHeight = `${size}px`;
+			var i = d.querySelector('img');
+			i.style.width = 'auto';
+			// i.style.height =  `100%`;
+			i.style.height =  `${size}px`;
+			// d.style.maxWidth =`${size}px`;
+			// d.style.maxHeight = `${size * 0.67}px`;
+			// d.style.maxHeight = `auto`;
+			// d.style.maxHeight = `${size}px`;
 		}
 	)
 }

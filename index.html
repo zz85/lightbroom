@@ -25,7 +25,7 @@
 		<button onclick="togglePreviewSlider()">v</button>
 		<button onclick="sizeThumbnails(120)">S</button>
 		<button onclick="sizeThumbnails(240)">M</button>
-		<button onclick="sizeThumbnails(800)">L</button>
+		<button onclick="sizeThumbnails(360)">L</button>
 
     </div>
 
@@ -88,11 +88,10 @@
 		}
 
 		.pic {
-			max-height: 320px;
-			max-width: 320px;
+			/*max-height: 320px;
+			max-width: 320px;*/
 
 			margin: 5px;
-
 			float: left;
 		}
 
@@ -115,12 +114,12 @@
 		.nofilter img {
 			width: 100%;
 		}
-		
+
 		.selected-effect {
 			border: 2px solid #ccc;
 			box-sizing: border-box;
 		}
-		
+
 		.selected-effect:hover {
 			border: 2px solid #fff;
 		}
@@ -216,8 +215,8 @@
 			background: #333;
 		}
 
-		#preview > figure {
-			transition: 350ms ease-out all;
+		#preview > figure > img {
+			transition: height 350ms ease-out;
 		}
 
 		#preview-slider {
