@@ -120,17 +120,17 @@ img.onmousedown = function(e) {
 	switchStyle(save);
 }
 
-function previewBig(img, photo, orientation) {
+function previewBig(oimg, photo, orientation) {
 	selectedPhoto = photo;
 
-	img = scaleImage(img, 590, orientation);
+	var img = scaleImage(oimg, 590, orientation);
 
 	var child;
 	while (child = big.childNodes[0]) {
 		child.remove();
 	}
 
-	n = document.createElement('figure');
+	var n = document.createElement('figure');
 	n.appendChild(img.cloneNode());
 	n.classList.add('big');
 	n.classList.add(currentStyle);
@@ -138,7 +138,11 @@ function previewBig(img, photo, orientation) {
 
 	big.appendChild(n);
 
+	// img = scaleImage(oimg, maxLength, orientation);
+
 	img = scaleImage(img, maxLength);
+
+	img.onload = () => {
 
 	styles.forEach(function(s) {
 		var m = filterItems.get(s).querySelector('figure');
@@ -156,6 +160,8 @@ function previewBig(img, photo, orientation) {
 		m.classList.add(s);
 
 	});
+
+	}
 
 }
 
