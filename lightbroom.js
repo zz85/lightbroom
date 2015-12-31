@@ -339,7 +339,30 @@ function toggleEffects() {
 		filters.style.height = '128px';
 		effectsTray = true;
 	}
+}
 
 
+var slider = document.getElementById('preview-slider');
+slider.onmousedown = function() {
 
+	var moved = false;
+
+	var onmove = function(e) {
+		moved = true;
+		var x = window.innerHeight - e.screenY;
+
+		preview.style.height = x + 'px';
+	};
+
+	var onup = function() {
+		if (!moved) {
+			togglePreviewSlider();
+		}
+
+		window.removeEventListener('mousemove', onmove);
+		window.removeEventListener('mouseup', onup);
+	}
+
+	window.addEventListener('mousemove', onmove);
+	window.addEventListener('mouseup', onup);
 }
