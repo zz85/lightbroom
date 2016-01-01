@@ -4,10 +4,25 @@
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	</head>
 <body>
-	<link rel="stylesheet" href="cssgram.min.css">
+	<link rel="stylesheet" href="cssgram.min.css"></link>
+	<link rel="stylesheet" href="lightbroom.css"></link>
 	<script src="ImageOpener.js"></script>
 	<script src="photo.js"></script>
 	<script src="node_modules/exif-js/exif.js"></script>
+
+	<!--
+		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
+
+		TODO
+		- Remove images
+		- Remember last effect, last output settings (resolution)
+
+		DONE
+		1. Photo rotation (transform in canvas, pass css transform)
+		2. Output size (easy, can use css for now)
+		3. Save last target folder
+	-->
+
 
     <div id="topbar">
 		<!-- toolbar here -->
@@ -27,7 +42,6 @@
 			<button onclick="sizeThumbnails(120)">S</button>
 			<button onclick="sizeThumbnails(240)">M</button>
 			<button onclick="sizeThumbnails(360)">L</button>
-
 		</div>
 
 		<div class="txt-drag-your-photos-here" style="bottom: 0">
@@ -40,216 +54,22 @@
 
 	<div id="filters"></div>
 
-	<!--
-		NOT IN USE
-		<div id="peeks">
-		</div>
-	-->
-
 	<div id="sliders"></div>
 
-	<div id="loupe">
-		<button onclick="togglePreviewSlider()" style="float:right;">v</button>
+	<div>
+		<div id="loupe">
+			<button onclick="togglePreviewSlider()" style="float:right;">v</button>
 
-		<div id="big">
+			<div id="big">
 
+			</div>
+		</div>
+
+		<div id="preview">
+			<div id="preview-slider"></div>
+			<!-- film strip here -->
 		</div>
 	</div>
-
-	<div id="preview">
-		<div id="preview-slider"></div>
-		<!-- film strip here -->
-	</div>
-
-	<!--
-		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
-
-		TODO
-		- Remove images
-		- Remember last effect, last output settings (resolution)
-
-		DONE
-		1. Photo rotation (transform in canvas, pass css transform)
-		2. Output size (easy, can use css for now)
-		3. Save last target folder
-	-->
-
-	<style>
-		body {
-            font-family: 'Lato', sans-serif;
-			background-color: #333740;
-			color: #ddd;
-			font-size: 13px;
-            margin: 0;
-            padding: 0;
-			outline: none;
-		}
-
-        #topbar {
-            background: #555862;
-            box-shadow: 0px 1px 0px 0px #24272D;
-            width: 100%;
-            height: 50px;
-			display: flex;
-        }
-
-		#save-options {
-			transition: width 400ms ease-out;
-			width: 90px;
-			display: inline-block;
-			overflow: hidden;
-		}
-
-		#save-options:hover {
-			width: 670px;
-		}
-
-		.pic {
-			/*max-height: 320px;
-			max-width: 320px;*/
-
-			margin: 5px;
-			float: left;
-		}
-
-		.pic img, .effect img {
-			border-radius: 4px;
-		}
-
-		.peek {
-			max-height: 120px;
-			max-width: 120px;
-			float: left;
-			margin: 2px;
-		}
-
-		.nofilter img {
-			width: 100%;
-		}
-
-		.selected-effect {
-			border: 2px solid #ccc;
-			box-sizing: border-box;
-		}
-
-		.selected-effect:hover {
-			border: 2px solid #fff;
-		}
-
-		#filters {
-			display: flex;
-			overflow: scroll;
-            background-color: #23262C;
-            box-shadow: 0px 1px 0px 0px rgba(255,255,255,0.30);
-            padding: 14px;
-            font-size: 13px;
-			transition: height 250ms;
-		}
-
-		button {
-            font-family: 'Lato', sans-serif;
-			padding: 10px;
-			margin: 4px 4px 14px 4px;
-			background-image: linear-gradient(-180deg, #7B7E87 0%, #555862 100%);
-			border: 1px solid #292B31;
-			box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.30), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.60);
-			border-radius: 4px;
-			color: #eaeaea;
-            font-size: 13px;
-
-			text-overflow: ellipsis;
-			white-space: nowrap;
-		}
-
-		.effect {
-			width: 130px;
-			display: block;
-			text-align: center;
-			font-weight: bold;
-			display: block;
-		}
-
-		button:active {
-			box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
-		}
-
-		button:hover {
-			background-image: -webkit-linear-gradient(#BDC2D0 0%, #656874 100%);
-			background-image: -o-linear-gradient(#BDC2D0 0%, #656874 100%);
-			background-image: linear-gradient(#BDC2D0 0%, #656874 100%);
-		}
-
-		img {
-			border: 1px solid transparent;
-		}
-
-		img:hover {
-			border: 1px solid #ddd;
-		}
-
-		#loupe {
-			/*overflow: auto;*/
-			height: 46%;
-		}
-
-		#big {
-			/*width: 590px;
-			height: 390px;
-			*/
-			/*max-height: 590px;
-			max-width: 590px;*/
-		}
-
-		.dotted-border {
-			width: 360px;
-			height: 230px;
-			border: 2px dotted #676B78;
-			border-radius: 4px;
-		}
-
-		.txt-drag-your-photos-here {
-			font-size: 15px;
-			color: #898D9B;
-		}
-
-		#sliders {
-			right: 0px;
-			width: 200px;
-			position: absolute;
-			background:rgba(0, 0, 0, 0.30);
-		}
-
-		#preview {
-			/* Film Strip */
-			/*display: flex;
-			overflow: scroll;*/
-
-			height: 39%;
-			width: 100%;
-
-			position: absolute;
-			overflow: auto;
-			bottom: 0;
-			border-top: 1px solid #999;
-			transition: 350ms ease-out height;
-			background: #333;
-			z-index: 2;
-		}
-
-		#preview > figure > img {
-			transition: height 350ms ease-out;
-		}
-
-		#preview-slider {
-			display: block;
-			width: 100%;
-			height: 8px;
-			background: #000;
-			cursor: ns-resize;
-		}
-
-	</style>
-
 	<script src="lightbroom.js"></script>
 	<script src="transfer-image.js"></script>
 
