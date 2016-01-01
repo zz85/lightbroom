@@ -48,8 +48,9 @@
 
 	<div id="sliders"></div>
 
-	<div id="drop">
+	<div id="loupe">
 		<button onclick="togglePreviewSlider()" style="float:right;">v</button>
+
 		<div id="big">
 
 		</div>
@@ -122,11 +123,6 @@
 			margin: 2px;
 		}
 
-		.big {
-			max-height: 590px;
-			max-width: 590px;
-		}
-
 		.nofilter img {
 			width: 100%;
 		}
@@ -191,10 +187,17 @@
 			border: 1px solid #ddd;
 		}
 
+		#loupe {
+			/*overflow: auto;*/
+			height: 46%;
+		}
+
 		#big {
-			display: inline-block;
-			width: 590px;
+			/*width: 590px;
 			height: 390px;
+			*/
+			/*max-height: 590px;
+			max-width: 590px;*/
 		}
 
 		.dotted-border {

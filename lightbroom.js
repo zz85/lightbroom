@@ -2,7 +2,9 @@
 
 var opener = new ImageOpener(processImage);
 var count = 0;
-var maxLength = 240;
+var MAX_EFFECT_PREVIEW_LENGTH = 240;
+var MAX_BIG_PREVIEW_LENGTH = 1600; // || 590;
+var FILMSTRIP_THUMBNAIL_LENGTH = 390;;
 
 var preview = document.getElementById('preview');
 var filters = document.getElementById('filters');
@@ -123,7 +125,7 @@ img.onmousedown = function(e) {
 function previewBig(oimg, photo, orientation) {
 	selectedPhoto = photo;
 
-	var img = scaleImage(oimg, 590, orientation);
+	var img = scaleImage(oimg, MAX_BIG_PREVIEW_LENGTH, orientation);
 
 	var child;
 	while (child = big.childNodes[0]) {
@@ -140,7 +142,7 @@ function previewBig(oimg, photo, orientation) {
 
 	// img = scaleImage(oimg, maxLength, orientation);
 
-	img = scaleImage(img, maxLength);
+	img = scaleImage(img, MAX_EFFECT_PREVIEW_LENGTH);
 
 	img.onload = () => {
 
@@ -268,7 +270,7 @@ function processImage2(oImg, path, i, exif) {
 		previewBig(oImg, photo, orientation);
 	}
 
-	var img = scaleImage(oImg, 390, orientation);
+	var img = scaleImage(oImg, FILMSTRIP_THUMBNAIL_LENGTH, orientation);
 
 	var figure = document.createElement('figure');
 	figure.classList.add('pic');
