@@ -59,7 +59,7 @@ function setup() {
 			b.querySelector('img').classList.add('selected-effect');
 
 			saved = currentStyle;
-			switchStyle(s);
+			switchStyle(s, true);
 		}
 
 		b.onmouseover = function() {
@@ -88,33 +88,39 @@ function setup() {
 	var tmp;
 	var save;
 
-	var img = big;
+	// var img = big;
 
-	img.onmouseover = function(e) {
-		save = currentStyle;
-	}
+	// img.onmouseover = function(e) {
+	// 	save = currentStyle;
+	// }
 
-	img.onmousemove = function(e) {
-		// code here to reimplement scrubbing behaviour
-		// (potatoe prototype6)
-	}
+	// img.onmousemove = function(e) {
+	// 	// code here to reimplement scrubbing behaviour
+	// 	// (potatoe prototype6)
+	// }
 
-	img.onmouseout = function(e) {
-		if (!bigimg) return;
-		tmp = bigimg.classList[1];
-		bigimg.classList.remove(tmp);
-		bigimg.classList.add(currentStyle);
-	}
+	// img.onmouseout = function(e) {
+	// 	if (!bigimg) return;
+	// 	tmp = bigimg.classList[1];
+	// 	bigimg.classList.remove(tmp);
+	// 	bigimg.classList.add(currentStyle);
+	// }
 
-	img.onmousedown = function(e) {
-		save = bigimg.classList[1];
-		switchStyle(save);
-	}
+	// img.onmousedown = function(e) {
+	// 	save = bigimg.classList[1];
+	// 	switchStyle(save);
+	// }
 }
 
 
-function switchStyle(s) {
+function switchStyle(s, commit) {
 	var old = currentStyle;
+
+	// photos.selection.forEach( p => {
+	// 	p.effect = s;
+	// });
+
+	// photosDomSync();
 
 	var pics = document.querySelectorAll('.pic, .big')
 
@@ -362,23 +368,34 @@ function sizeThumbnails(size) {
 }
 
 function clearThumbnails() {
+	var proceed = confirm('Remove all photos?');
+	if (!proceed) return;
 	photos.empty();
 	photosDomSync();
 }
 
 function removeSelection() {
+	var proceed = confirm('Remove ' + photos.selection.size + ' photos?');
+	if (!proceed) return; 
 	photos.selection.forEach(photos.remove.bind(photos));
 	photosDomSync();
 }
 
 function photosDomSync() {
-	// remove
-	Array.from(document.querySelectorAll('[data-path]')).forEach( d => {
-		var exist = photos.exists(d.dataset.path);
-		if (! exist ) {
-			d.remove();
+	var dom = Array.from(document.querySelectorAll('[data-path]'))
+	
+	dom.forEach( d => {
+		var match = photos.filter(d.dataset.path);
+
+		// remove
+		if (! match.length ) {
+			return d.remove();
 		}
-	} )
+
+		// update
+		var img = d.querySelector('.pic');
+		img.className = 'pic ' + match[0].effect;
+	} );
 }
 
 var effectsTray = true;
@@ -392,7 +409,6 @@ function toggleEffects() {
 		effectsTray = true;
 	}
 }
-
 
 var slider = document.getElementById('preview-slider');
 slider.onmousedown = function() {

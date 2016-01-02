@@ -11,11 +11,14 @@ function PhotoList() {
 PhotoList.prototype.add = function(photo) {
 	this.list.push(photo);
 	this.save();
+	// this.selection.add(photo);
 }
 
 PhotoList.prototype.remove = function(photo) {
 	var i = this.list.indexOf(photo);
 	this.list.splice(i, 1);
+	
+	this.selection.delete(photo);
 	this.save();
 }
 

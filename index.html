@@ -18,13 +18,14 @@ for some reason this is causing strange layout issues...
 		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
 
 		TODO
-		- Remove images
 		- Remember last effect, last output settings (resolution)
 
 		DONE
 		1. Photo rotation (transform in canvas, pass css transform)
 		2. Output size (easy, can use css for now)
 		3. Save last target folder
+		4. Select and Remove images
+		5. Resize film strip thumbnails
 	-->
 
 
@@ -51,8 +52,9 @@ for some reason this is causing strange layout issues...
 		<div class="txt-drag-your-photos-here" style="bottom: 0">
 			<button onclick="toggleEffects()">Effects</button>
 			Drag photos into the app to start.
-			<button onclick="clearThumbnails()">Clear</button>
+			
 			<button onclick="removeSelection()">Remove</button>
+			<button onclick="clearThumbnails()">Remove All</button>
 		</div>
 
     </div>
