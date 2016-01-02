@@ -457,3 +457,17 @@ slider.onmousedown = function() {
 	window.addEventListener('mousemove', onmove);
 	window.addEventListener('mouseup', onup);
 }
+
+function brightness(input) {
+	console.log(input.value);
+	var img = big.querySelector('img');
+	img.style.cssText = `-webkit-filter: brightness(${input.value})`;
+	// big.style.cssText = `-webkit-filter: brightness(${input.value})`;
+}
+
+function contrast(input) {
+	console.log(input.value);
+	var img = big.querySelector('img');
+	img.style.cssText = `-webkit-filter: contrast(${input.value})`;
+	// big.style.cssText = `-webkit-filter: brightness(${input.value})`;
+}

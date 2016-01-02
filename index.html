@@ -52,10 +52,10 @@ for some reason this is causing strange layout issues...
 		<div class="txt-drag-your-photos-here" style="bottom: 0">
 			<button onclick="toggleEffects()">Effects</button>
 			Drag photos into the app to start.
-			
+
 			<button onclick="removeSelection()">Remove</button>
 			<button onclick="clearThumbnails()">Remove All</button>
-			
+
 			<button onclick="selectAll()">Select All</button>
 		</div>
 
@@ -63,13 +63,16 @@ for some reason this is causing strange layout issues...
 
 	<div id="filters"></div>
 
-	<div id="sliders"></div>
-
 	<div id="loupe">
-		<button onclick="togglePreviewSlider()" style="float:right;">v</button>
+		<button onclick="togglePreviewSlider()" style="right:0; z-index: 20; position: fixed;">v</button>
+
+		<div id="sliders">
+			<input type="range" onchange="brightness(this)" onmousemove="brightness(this)" min="0" max="4" value="1" step="0.001"/>
+			<input type="range" onchange="contrast(this)" onmousemove="contrast(this)" min="0" max="4" value="1" step="0.001"/>
+		</div>
+
 
 		<div id="big">
-
 		</div>
 	</div>
 

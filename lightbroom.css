@@ -136,6 +136,7 @@ img:hover {
 	width: 200px;
 	position: absolute;
 	background:rgba(0, 0, 0, 0.30);
+	z-index: 10;
 }
 
 #preview {
@@ -149,7 +150,7 @@ img:hover {
 	transition: 350ms ease-out height;
 	/*background: #333;*/
 	z-index: 2;
-	
+
 	display: flex;
 	flex-direction: column;
 }
@@ -163,11 +164,11 @@ img:hover {
 	height: 100%;*/
 	flex: 1;
 	overflow: auto;
-	
+
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	
+
 	align-content: flex-start;
 }
 
@@ -192,7 +193,7 @@ img:hover {
 	/*display: inline-block;*/
 	z-index: 10;
 	/*opacity: 0.2;*/
-	
+
 }
 
 .checkbox label:hover {
@@ -227,7 +228,7 @@ img:hover {
 	opacity: 1;
 	color: rgba(255, 255, 255, 1);
 	border: 2px solid rgba(255, 255, 255, 0.8);
-	
+
 	border-radius: 50%;
 }
 
