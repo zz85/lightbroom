@@ -277,7 +277,7 @@ function processImage2(oImg, path, i, exif) {
 	figure.classList.add(currentStyle);
 	figure.appendChild(img);
 
-	preview.appendChild(figure);
+	filmstrip.appendChild(figure);
 
 	figure.scrollIntoView(false, 200);
 
