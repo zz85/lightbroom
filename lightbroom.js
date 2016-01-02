@@ -383,6 +383,21 @@ function removeSelection() {
 	photosDomSync();
 }
 
+var toggleggg = false;
+
+function selectAll() {
+	// photos.list.forEach(photos.selection.add.bind(photos));
+	// photosDomSync();
+	
+	Array.from(document.querySelectorAll('#filmstrip input')).forEach(
+		cb => {
+			toggleggg = !toggleggg;
+			cb.checked = toggleggg;
+			cb.onchange();
+		}
+	)
+}
+
 function photosDomSync() {
 	var dom = Array.from(document.querySelectorAll('[data-path]'))
 	
