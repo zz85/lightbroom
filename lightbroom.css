@@ -1,0 +1,245 @@
+body {
+	font-family: 'Lato', sans-serif;
+	background-color: #333740;
+	color: #ddd;
+	font-size: 13px;
+	margin: 0;
+	padding: 0;
+	outline: none;
+
+	display: flex;
+	flex-direction: column;
+}
+
+html, body {
+	height: 100%;
+}
+
+#topbar {
+	background: #555862;
+	box-shadow: 0px 1px 0px 0px #24272D;
+	width: 100%;
+	height: 50px;
+	display: flex;
+}
+
+#save-options {
+	transition: width 400ms ease-out;
+	width: 90px;
+	display: inline-block;
+	overflow: hidden;
+}
+
+#save-options:hover {
+	width: 670px;
+}
+
+.peek {
+	max-height: 120px;
+	max-width: 120px;
+	float: left;
+	margin: 2px;
+}
+
+.nofilter img {
+	width: 100%;
+}
+
+.selected-effect {
+	border: 2px solid #ccc;
+	box-sizing: border-box;
+}
+
+.selected-effect:hover {
+	border: 2px solid #fff;
+}
+
+#filters {
+	display: flex;
+	overflow: scroll;
+	background-color: #23262C;
+	box-shadow: 0px 1px 0px 0px rgba(255,255,255,0.30);
+	padding: 14px;
+	font-size: 13px;
+	transition: height 250ms;
+}
+
+button {
+	font-family: 'Lato', sans-serif;
+	padding: 10px;
+	margin: 4px 4px 14px 4px;
+	background-image: linear-gradient(-180deg, #7B7E87 0%, #555862 100%);
+	border: 1px solid #292B31;
+	box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.30), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.60);
+	border-radius: 4px;
+	color: #eaeaea;
+	font-size: 13px;
+
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.effect {
+	width: 130px;
+	display: block;
+	text-align: center;
+	font-weight: bold;
+	display: block;
+}
+
+button:active {
+	box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
+}
+
+button:hover {
+	background-image: -webkit-linear-gradient(#BDC2D0 0%, #656874 100%);
+	background-image: -o-linear-gradient(#BDC2D0 0%, #656874 100%);
+	background-image: linear-gradient(#BDC2D0 0%, #656874 100%);
+}
+
+img {
+	border: 1px solid transparent;
+}
+
+img:hover {
+	border: 1px solid #ddd;
+}
+
+#loupe {
+	/*height: 46%;*/
+	flex: 1;
+	overflow: auto;
+}
+
+#big {
+	/*width: 590px;
+	height: 390px;
+	*/
+	/*max-height: 590px;
+	max-width: 590px;*/
+}
+
+.dotted-border {
+	width: 360px;
+	height: 230px;
+	border: 2px dotted #676B78;
+	border-radius: 4px;
+}
+
+.txt-drag-your-photos-here {
+	font-size: 15px;
+	color: #898D9B;
+}
+
+#sliders {
+	right: 0px;
+	width: 200px;
+	position: absolute;
+	background:rgba(0, 0, 0, 0.30);
+}
+
+#preview {
+	height: 39%;
+	width: 100%;
+
+	/*position: absolute;
+	overflow: auto;*/
+	bottom: 0;
+	border-top: 1px solid #999;
+	transition: 350ms ease-out height;
+	/*background: #333;*/
+	z-index: 2;
+	
+	display: flex;
+	flex-direction: column;
+}
+
+#filmstrip img {
+	transition: height 350ms ease-out;
+}
+
+#filmstrip {
+	/*width: 100%;
+	height: 100%;*/
+	flex: 1;
+	overflow: auto;
+	
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	
+	align-content: flex-start;
+}
+
+#preview-slider {
+	display: block;
+	width: 100%;
+	height: 8px;
+	background: #000;
+	cursor: ns-resize;
+}
+
+.no-transition {
+	transition: none !important;
+}
+
+.checkbox {
+	/*background: deeppink;*/
+	/*width: 40px;
+	height: 40px;*/
+	position: absolute;
+	right: 0;
+	/*display: inline-block;*/
+	z-index: 10;
+	/*opacity: 0.2;*/
+	
+}
+
+.checkbox label:hover {
+	opacity: 1;
+	background: rgba(0,0,0,0.50);
+}
+
+.checkbox label {
+	display: inline-block;
+	position: relative;
+	font-size: 2em;
+	vertical-align: center;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+	transition: color 0.3s;
+	border: 2px solid rgba(255, 255, 255, 1);
+	width: 1.3em;
+	height: 1.3em;
+	opacity: 0.2;
+	border-radius: 50%;
+	transition: opacity 0.2s, border-radius 0.2s, border 0.25s;
+	margin: 4px;
+}
+
+.checkbox input[type="checkbox"],
+.checkbox input[type="radio"] {
+	display: none;
+}
+
+.checkbox .checked {
+	opacity: 1;
+	color: rgba(255, 255, 255, 1);
+	border: 2px solid rgba(255, 255, 255, 0.1);
+	border-radius: 0;
+}
+
+#filmstrip > div {
+	display: inline-block;
+	margin: 5px;
+	position: relative;
+}
+
+.pic {
+	margin: 0;
+}
+
+.pic img, .effect img {
+	border-radius: 4px;
+}

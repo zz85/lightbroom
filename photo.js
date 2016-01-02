@@ -5,17 +5,20 @@
 function PhotoList() {
 	this.list = []; // new Set();
 
-	// this.selection
+	this.selection = new Set();
 }
 
 PhotoList.prototype.add = function(photo) {
 	this.list.push(photo);
 	this.save();
+	// this.selection.add(photo);
 }
 
 PhotoList.prototype.remove = function(photo) {
 	var i = this.list.indexOf(photo);
-	this.list.slice(i, 1);
+	this.list.splice(i, 1);
+
+	this.selection.delete(photo);
 	this.save();
 }
 
@@ -31,8 +34,44 @@ PhotoList.prototype.items = function() {
 	return Array.from(this.list);
 }
 
+PhotoList.prototype.toJSON = function() {
+	this.list.map( p => { return {
+		filename: p.filename,
+		style: p.style
+	}} )
+}
+
 PhotoList.prototype.save = function() {
 	localStorage.lastLoad = JSON.stringify(this.filenames());
+	// localStorage.lastLoad = JSON.stringify(this.toJSON());
+}
+
+PhotoList.prototype.load = function() {
+	// TODO
+	var lastLoad = localStorage.lastLoad;
+	if (lastLoad) {
+		var list = JSON.parse(lastLoad);
+		list.forEach( json => {
+			this.list.push(
+				new Photo()
+			)
+		} );
+	}
+}
+
+PhotoList.prototype.empty = function() {
+	this.list = [];
+	this.save();
+
+	this.selection.clear()
+}
+
+PhotoList.prototype.exists = function(path) {
+	return this.list.some( p => p.filename === path );
+}
+
+PhotoList.prototype.filter = function(path) {
+	return this.list.filter( p => p.filename === path );
 }
 
 function Photo(filename, img, orientation) {
@@ -40,6 +79,6 @@ function Photo(filename, img, orientation) {
 	this.img = img;
 	this.orientation = orientation;
 
-	// styles
-	// adjustments
+	this.effect = null;
+	this.adjustment = '';
 }

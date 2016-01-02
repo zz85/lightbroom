@@ -65,7 +65,7 @@ function load (photo, style, filename, longest, orientation) {
 			count++;
 			if (count < 3 || win.isLoading()) {
 				// not sure if this actually is useful.
-				// 'did-stop-loading'
+				// 'did-stop-loading'  perhaps naturalWidth can give clues too?
 				return requestAnimationFrame(wait);
 			}
 			console.timeEnd('raf')

@@ -1,465 +1,84 @@
+<!--<!DOCTYPE html>
+for some reason this is causing strange layout issues...
+-->
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>Lightbroom Preview</title>
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	</head>
 <body>
-	<link rel="stylesheet" href="cssgram.min.css">
+	<link rel="stylesheet" href="cssgram.min.css"></link>
+	<link rel="stylesheet" href="lightbroom.css"></link>
 	<script src="ImageOpener.js"></script>
 	<script src="photo.js"></script>
 	<script src="node_modules/exif-js/exif.js"></script>
-
-    <div id="topbar">
-        <div id="toolbar">
-			<!--<button>browse photos here.....</button>-->
-			<span class="txt-drag-your-photos-here">
-				<button onclick="saveImage()">Save Image</button>
-				<br/>
-
-				<button onclick="outputFolder()">Output directory</button> <span id="saveTo"></span>
-				<button onclick="saveAll()">Save All Images</button>
-				Long side: <input id="longside" type="text" size="5" value="" style="background: none; color: #fff;" placeholder="auto"/>
-
-				<span id="status"></span>
-				<!--[ Select Target Folder ] [ Output Size ][ Output Suffix ]-->
-			</span>
-		</div>
-
-    </div>
-	<div id="filters"></div>
-	<div id="peeks"></div>
-
-	<div id="sliders"></div>
-
-	<div id="drop">
-		
-		<div id="big"></div>
-
-		<br/>
-		<div id="preview"></div>
-	</div>
 
 	<!--
 		initial potatoe prototype from http://jabtunes.com/labs/potatoe/ series
 
 		TODO
-		- Remove images
 		- Remember last effect, last output settings (resolution)
 
 		DONE
 		1. Photo rotation (transform in canvas, pass css transform)
 		2. Output size (easy, can use css for now)
 		3. Save last target folder
+		4. Select and Remove images
+		5. Resize film strip thumbnails
 	-->
 
-	<style>
-		body {
-            font-family: 'Lato', sans-serif;
-			background-color: #333740;
-			color: #ddd;
-			font-size: 13px;
-            margin: 0;
-            padding: 0;
-		}
-        
-        #topbar {
-            background: #555862;
-            box-shadow: 0px 1px 0px 0px #24272D;
-            width: 100%;
-            height: 50px;
-        }
-        
-		.pic {
-			max-height: 320px;
-			max-width: 320px;
 
-			margin: 5px;
+    <div id="topbar">
+		<!-- toolbar here -->
+		<!--<button>browse photos here.....</button>-->
+		<span id="save-options" class="txt-drag-your-photos-here">
+			<button onclick="saveImage()">Save Image</button>
+			<button onclick="outputFolder()">Output directory</button> <span id="saveTo"></span>
+			<button onclick="saveAll()">Save All Images</button>
+			Long side: <input id="longside" type="text" size="5" value="" style="background: none; color: #fff;" placeholder="auto"/>
 
-			float: left;
-		}
+			<span id="status"></span>
+			<!--[ Select Target Folder ] [ Output Size ][ Output Suffix ]-->
+		</span>
 
-		.peek {
-			max-height: 120px;
-			max-width: 120px;
-			float: left;
-			margin: 2px;
-		}
+		<div>
+			Filmstrip:
+			<button onclick="sizeThumbnails(120)">S</button>
+			<button onclick="sizeThumbnails(240)">M</button>
+			<button onclick="sizeThumbnails(360)">L</button>
+		</div>
 
-		.big {
-			max-height: 590px;
-			max-width: 590px;
-		}
-
-		.nofilter img {
-			width: 100%;
-            border-radius: 4px;
-		}
-
-		#filters {
-			display: flex;
-			overflow: scroll;
-            background-color: #23262C;
-            box-shadow: 0px 1px 0px 0px rgba(255,255,255,0.30);
-            padding: 14px;
-            font-size: 13px;
-		}
-
-		button {
-            font-family: 'Lato', sans-serif;
-			padding: 10px;
-			margin: 4px 4px 14px 4px;
-			background-image: linear-gradient(-180deg, #7B7E87 0%, #555862 100%);
-			border: 1px solid #292B31;
-			box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.30), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.60);
-			border-radius: 4px;
-			color: #eaeaea;
-            font-size: 13px;
-		}
-
-		.effect {
-			width: 130px;
-			display: block;
-			text-align: center;
-			font-weight: bold;
-			display: block;
-
-		}
-
-		button:active {
-			box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
-		}
-
-		button:hover {
-			background-image: -webkit-linear-gradient(#BDC2D0 0%, #656874 100%);
-			background-image: -o-linear-gradient(#BDC2D0 0%, #656874 100%);
-			background-image: linear-gradient(#BDC2D0 0%, #656874 100%);
-		}
-
-		img {
-			border: 1px solid transparent;
-		}
-
-		img:hover {
-			border: 1px solid #ddd;
-		}
-
-		#big {
-			display: inline-block;
-			width: 590px;
-			height: 390px;
-		}
-
-		.dotted-border {
-			width: 360px;
-			height: 230px;
-			border: 2px dotted #676B78;
-			border-radius: 4px;
-		}
-
-		.txt-drag-your-photos-here {
-			font-size: 15px;
-			color: #898D9B;
-		}
-
-		#sliders {
-			right: 0px;
-			width: 200px;
-			position: absolute;
-			background:rgba(0, 0, 0, 0.30);
-		}
-
-		#preview {
-			/* Film Strip */
-			/*display: flex;
-			overflow: scroll;*/
-
-			height: 39%;
-			position: absolute;
-			overflow: auto;
-			bottom: 0;
-			border-top: 1px solid #999;
-		}
-
-	</style>
-
-	<script>
-
-		var opener = new ImageOpener(processImage);
-		var count = 0;
-		var maxLength = 240;
-
-		var preview = document.getElementById('preview');
-		var filters = document.getElementById('filters');
-		var peeks = document.getElementById('peeks');
-		var big = document.getElementById('big'), bigimg;
-
-		var styles = [
-			"Nofilter",
-			"Aden",
-			"Inkwell",
-			"Perpetua",
-			"Reyes",
-			"Gingham",
-			"Toaster",
-			"Walden",
-			"Hudson",
-			"Earlybird",
-			"Mayfair",
-			"Lofi",
-			"_1977",
-			"Brooklyn",
-			"Xpro2",
-			"Nashville",
-			"Lark",
-			"Moon",
-			"Clarendon",
-			"Willow"
-		];
-
-		var currentStyle = 'nofilter';
-		var saved;
-		var filterItems = new Map();
-
-		var filenames;
-		var selectedPhoto;
-
-		var photos = new PhotoList();
-
-		styles.forEach( function(s) {
-			var div = document.createElement('div');
-
-			var b = document.createElement('b');
-			b.className = 'effect';
+		<div class="txt-drag-your-photos-here" style="bottom: 0">
+			<button onclick="toggleEffects()">Effects</button>
+			Drag photos into the app to start.
 			
+			<button onclick="removeSelection()">Remove</button>
+			<button onclick="clearThumbnails()">Remove All</button>
+			
+			<button onclick="selectAll()">Select All</button>
+		</div>
 
-			b.onclick = function() {
-				saved = currentStyle;
-				switchStyle(s);
-			}
+    </div>
 
-			b.onmouseover = function() {
-				saved = currentStyle;
-				switchStyle(s);
-			}
+	<div id="filters"></div>
 
-			b.onmouseout = function() {
-				switchStyle(saved);
-			}
+	<div id="sliders"></div>
 
-			div.appendChild(b);
+	<div id="loupe">
+		<button onclick="togglePreviewSlider()" style="float:right;">v</button>
 
-			var figure = document.createElement('figure');
-			b.appendChild(figure);
-            b.innerHTML += s;
+		<div id="big">
 
-			filterItems.set(s, div);
-			filters.appendChild(div);
-		} )
+		</div>
+	</div>
 
+	<div id="preview">
+		<div id="preview-slider"></div>
+		<div id="filmstrip"></div>
+	</div>
 
-		function switchStyle(s) {
-			var old = currentStyle;
-
-			var pics = document.querySelectorAll('.pic, .big')
-
-			for (var i = 0; i < pics.length; i ++) {
-				var p = pics[i];
-				p.classList.remove(old);
-				p.classList.add(s);
-			}
-
-			currentStyle = s;
-		}
-
-		var x = 0;
-
-		var tmp;
-		var save;
-
-		var img = big;
-		var lasty;
-
-		img.onmouseover = function(e) {
-			save = currentStyle;
-		}
-
-		img.onmousemove = function(e) {
-			// code here to reimplement scrubbing behaviour
-			// (potatoe prototype6)
-		}
-
-		img.onmouseout = function(e) {
-			if (!bigimg) return;
-			tmp = bigimg.classList[1];
-			bigimg.classList.remove(tmp);
-			bigimg.classList.add(currentStyle);
-		}
-
-		img.onmousedown = function(e) {
-			save = bigimg.classList[1];
-			switchStyle(save);
-		}
-
-		function previewBig(img, photo, orientation) {
-			selectedPhoto = photo;
-
-			img = scaleImage(img, 590, orientation);
-
-			var child;
-			while (child = big.childNodes[0]) {
-				child.remove();
-			}
-
-			n = document.createElement('figure');
-			n.appendChild(img.cloneNode());
-			n.classList.add('big');
-			n.classList.add(currentStyle);
-			bigimg = n;
-
-			big.appendChild(n);
-
-			img = scaleImage(img, maxLength);
-
-			styles.forEach(function(s) {
-				var m = filterItems.get(s).querySelector('figure');
-
-				while (child = m.firstChild) {
-					child.remove();
-				}
-
-				m.appendChild(img.cloneNode());
-
-				while (m.classList.length) {
-					m.classList.remove(m.classList[0]);
-				}
-				m.classList.add('peek');
-				m.classList.add(s);
-
-			});
-
-		}
-
-		function scaleImage(img, maxLength, orientation) {
-			var canvas = getCanvas(img, maxLength, orientation);
-
-			var image = new Image();
-			image.src = canvas.toDataURL("image/png");
-
-			return image;
-		}
-
-		function getCanvas(img, maxLength, orientation) {
-			var imgWidth = img.naturalWidth;
-			var imgHeight = img.naturalHeight;
-
-			// can rotate here....
-
-			var scale = imgWidth > imgHeight ? maxLength / imgWidth : maxLength / imgHeight;
-
-			var canvas = document.createElement('canvas');
-			var ctx = canvas.getContext('2d');
-
-			var targetWidth = imgWidth * scale;
-			var targetHeight = imgHeight * scale;
-
-			canvas.width = targetWidth;
-			canvas.height = targetHeight;
-			if (orientation > 4) {
-				canvas.width = targetHeight;
-				canvas.height = targetWidth;
-			}
-
-			var width = targetWidth;
-			var height = targetHeight;
-
-			switch (orientation) {
-				case 2:
-					// horizontal flip
-					ctx.translate(width, 0);
-					ctx.scale(-1, 1);
-					break;
-				case 3:
-					// 180° rotate left
-					ctx.translate(width, height);
-					ctx.rotate(Math.PI);
-					break;
-				case 4:
-					// vertical flip
-					ctx.translate(0, height);
-					ctx.scale(1, -1);
-					break;
-				case 5:
-					// vertical flip + 90 rotate right
-					ctx.rotate(0.5 * Math.PI);
-					ctx.scale(1, -1);
-					break;
-				case 6:
-					// 90° rotate right
-					ctx.rotate(0.5 * Math.PI);
-					ctx.translate(0, -height);
-					break;
-				case 7:
-					// horizontal flip + 90 rotate right
-					ctx.rotate(0.5 * Math.PI);
-					ctx.translate(width, -height);
-					ctx.scale(-1, 1);
-					break;
-				case 8:
-					// 90° rotate left
-					ctx.rotate(-0.5 * Math.PI);
-					ctx.translate(-width, 0);
-					break;
-			}
-
-			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-
-			return canvas;
-		}
-
-		// var filenames = [];
-		// filenames.push(files[i].path);
-		// localStorage.lastLoad = JSON.stringify(filenames);
-		// console.log('Got Files', filenames);
-
-		function processImage(oImg, path, i) {
-			EXIF.getData(oImg, function() {
-				var exif = EXIF.getAllTags(oImg);
-				processImage2(oImg, path, i, exif);
-			});
-		}
-
-		function processImage2(oImg, path, i, exif) {
-			var orientation = exif.Orientation;
-			var photo = new Photo(path, oImg, orientation);
-			photos.add( photo );
-
-			// console.log('process image');
-
-			// var canvas = getCanvas(img, 550);
-			// inlineSVGImg(canvas.toDataURL(), canvas.width, canvas.height);
-
-
-
-			if (photos.count() == 1) {
-				previewBig(oImg, photo, orientation);
-			}
-
-			var img = scaleImage(oImg, 390, orientation);
-
-			var figure = document.createElement('figure');
-			figure.classList.add('pic');
-			figure.classList.add(currentStyle);
-			figure.appendChild(img);
-
-			preview.appendChild(figure);
-
-			img.onclick = function() {
-				previewBig(oImg, photo, orientation);
-			}
-
-		}
-
-	</script>
+	<script src="lightbroom.js"></script>
 	<script src="transfer-image.js"></script>
 
 </body>
