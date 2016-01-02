@@ -34,8 +34,6 @@ html, body {
 	width: 670px;
 }
 
-
-
 .peek {
 	max-height: 120px;
 	max-width: 120px;
@@ -156,7 +154,7 @@ img:hover {
 	flex-direction: column;
 }
 
-#filmstrip > figure > img {
+#filmstrip img {
 	transition: height 350ms ease-out;
 }
 
@@ -169,6 +167,8 @@ img:hover {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
+	
+	align-content: flex-start;
 }
 
 #preview-slider {

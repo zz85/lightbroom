@@ -83,10 +83,10 @@ function setup() {
 
 	// setup big image preview
 
-	var x = 0;
+	// var x = 0;
 
-	var tmp;
-	var save;
+	// var tmp;
+	// var save;
 
 	// var img = big;
 
@@ -318,6 +318,8 @@ function processImage2(oImg, path, i, exif) {
 	figure.scrollIntoView(false, 200);
 
 	img.onclick = function() {
+		cb.checked = !cb.checked;
+		cb.onchange();
 		previewBig(oImg, photo, orientation);
 	}
 	
