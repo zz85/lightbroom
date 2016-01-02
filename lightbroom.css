@@ -6,6 +6,9 @@ body {
 	margin: 0;
 	padding: 0;
 	outline: none;
+
+	display: flex;
+	flex-direction: column;
 }
 
 #topbar {
@@ -111,8 +114,9 @@ img:hover {
 }
 
 #loupe {
-	/*overflow: auto;*/
-	height: 46%;
+	/*height: 46%;*/
+	flex: 1;
+	overflow: auto;
 }
 
 #big {
@@ -143,8 +147,6 @@ img:hover {
 }
 
 #preview {
-	/*overflow: scroll;*/
-
 	height: 39%;
 	width: 100%;
 
@@ -165,8 +167,8 @@ img:hover {
 }
 
 #filmstrip {
-	width: 100%;
-	height: 100%;
+	/*width: 100%;
+	height: 100%;*/
 	flex: 1;
 	overflow: auto;
 }

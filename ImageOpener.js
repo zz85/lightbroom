@@ -89,9 +89,11 @@ function ImageOpener( processImage, target ) {
 
 
 	function handleDragOver(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+		if (e.dataTransfer.files) {
+			e.stopPropagation();
+			e.preventDefault();
+			e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+		}
 	}
 
 
@@ -101,10 +103,15 @@ function ImageOpener( processImage, target ) {
 	}
 
 	function dropBehavior(e) {
-		console.log('Files are dropped', e);
-		e.stopPropagation();
-		e.preventDefault();
 		var files = e.dataTransfer.files;
+		
+		if (files) {
+			e.stopPropagation();
+			e.preventDefault();
+		} else {
+			console.log('Files are dropped', e);
+			return;
+		}
 
 		if (files.length) {
 			for (var i = 0; i < files.length; i++) {
