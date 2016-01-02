@@ -1,15 +1,15 @@
 'use strict';
 
-var opener = new ImageOpener(processImage);
-var count = 0;
 var MAX_EFFECT_PREVIEW_LENGTH = 240;
 var MAX_BIG_PREVIEW_LENGTH = 1600; // || 590;
 var FILMSTRIP_THUMBNAIL_LENGTH = 390;;
 
+var opener = new ImageOpener(processImage);
+
 var preview = document.getElementById('preview');
 var filters = document.getElementById('filters');
-var peeks = document.getElementById('peeks');
 var big = document.getElementById('big'), bigimg;
+var filmstrip = document.getElementById('filmstrip');
 
 var styles = [
 	"Nofilter",
@@ -43,40 +43,74 @@ var selectedPhoto;
 
 var photos = new PhotoList();
 
-styles.forEach( function(s) {
-	var div = document.createElement('div');
+setup();
 
-	var b = document.createElement('b');
-	b.className = 'effect';
+function setup() {
+	// add styled effect
+	styles.forEach( function(s) {
+		var div = document.createElement('div');
 
+		var b = document.createElement('b');
+		b.className = 'effect';
 
-	b.onclick = function() {
-		var last = document.querySelector('.selected-effect');
-		if (last) last.classList.remove('selected-effect');
-		b.querySelector('img').classList.add('selected-effect');
+		b.onclick = function() {
+			var last = document.querySelector('.selected-effect');
+			if (last) last.classList.remove('selected-effect');
+			b.querySelector('img').classList.add('selected-effect');
 
-		saved = currentStyle;
-		switchStyle(s);
+			saved = currentStyle;
+			switchStyle(s);
+		}
+
+		b.onmouseover = function() {
+			saved = currentStyle;
+			switchStyle(s);
+		}
+
+		b.onmouseout = function() {
+			switchStyle(saved);
+		}
+
+		div.appendChild(b);
+
+		var figure = document.createElement('figure');
+		b.appendChild(figure);
+		b.innerHTML += s;
+
+		filterItems.set(s, div);
+		filters.appendChild(div);
+	} );
+
+	// setup big image preview
+
+	var x = 0;
+
+	var tmp;
+	var save;
+
+	var img = big;
+
+	img.onmouseover = function(e) {
+		save = currentStyle;
 	}
 
-	b.onmouseover = function() {
-		saved = currentStyle;
-		switchStyle(s);
+	img.onmousemove = function(e) {
+		// code here to reimplement scrubbing behaviour
+		// (potatoe prototype6)
 	}
 
-	b.onmouseout = function() {
-		switchStyle(saved);
+	img.onmouseout = function(e) {
+		if (!bigimg) return;
+		tmp = bigimg.classList[1];
+		bigimg.classList.remove(tmp);
+		bigimg.classList.add(currentStyle);
 	}
 
-	div.appendChild(b);
-
-	var figure = document.createElement('figure');
-	b.appendChild(figure);
-	b.innerHTML += s;
-
-	filterItems.set(s, div);
-	filters.appendChild(div);
-} )
+	img.onmousedown = function(e) {
+		save = bigimg.classList[1];
+		switchStyle(save);
+	}
+}
 
 
 function switchStyle(s) {
@@ -91,35 +125,6 @@ function switchStyle(s) {
 	}
 
 	currentStyle = s;
-}
-
-var x = 0;
-
-var tmp;
-var save;
-
-var img = big;
-var lasty;
-
-img.onmouseover = function(e) {
-	save = currentStyle;
-}
-
-img.onmousemove = function(e) {
-	// code here to reimplement scrubbing behaviour
-	// (potatoe prototype6)
-}
-
-img.onmouseout = function(e) {
-	if (!bigimg) return;
-	tmp = bigimg.classList[1];
-	bigimg.classList.remove(tmp);
-	bigimg.classList.add(currentStyle);
-}
-
-img.onmousedown = function(e) {
-	save = bigimg.classList[1];
-	switchStyle(save);
 }
 
 function previewBig(oimg, photo, orientation) {
@@ -244,11 +249,6 @@ function getCanvas(img, maxLength, orientation) {
 	return canvas;
 }
 
-// var filenames = [];
-// filenames.push(files[i].path);
-// localStorage.lastLoad = JSON.stringify(filenames);
-// console.log('Got Files', filenames);
-
 function processImage(oImg, path, i) {
 	EXIF.getData(oImg, function() {
 		var exif = EXIF.getAllTags(oImg);
@@ -272,22 +272,58 @@ function processImage2(oImg, path, i, exif) {
 
 	var img = scaleImage(oImg, FILMSTRIP_THUMBNAIL_LENGTH, orientation);
 
+	var div = document.createElement('div');
+	div.dataset.path = path;
+
+	var checkbox = document.createElement('div');
+	checkbox.className = 'checkbox';
+
+	var lb = document.createElement('label');
+	lb.innerHTML = '✔';
+
+	var cb = document.createElement('input');
+	cb.type = 'checkbox';
+	cb.onchange = function() {
+		if (cb.checked) {
+			lb.classList.add('checked');
+			photos.selection.add( photo );
+		} else {
+			lb.classList.remove('checked');
+			photos.selection.delete( photo );
+		}
+	}
+
+	lb.appendChild(cb);
+
+	// ✔☑✓✓
+	checkbox.appendChild(lb);
+
 	var figure = document.createElement('figure');
 	figure.classList.add('pic');
 	figure.classList.add(currentStyle);
 	figure.appendChild(img);
 
-	filmstrip.appendChild(figure);
+	div.appendChild(checkbox);
+	div.appendChild(figure);
 
+	// div.innerHTML += path;
+
+	filmstrip.appendChild(div);
 	figure.scrollIntoView(false, 200);
 
 	img.onclick = function() {
 		previewBig(oImg, photo, orientation);
 	}
+	
+	/*
+		photos.remove(photo);
+		photosDomSync();
+	*/
+
 
 	sizeThumbnails(lastThumbnailSize);
-
 }
+
 var toggled = 0;
 
 /* Actions */
@@ -327,7 +363,22 @@ function sizeThumbnails(size) {
 
 function clearThumbnails() {
 	photos.empty();
-	location.reload();
+	photosDomSync();
+}
+
+function removeSelection() {
+	photos.selection.forEach(photos.remove.bind(photos));
+	photosDomSync();
+}
+
+function photosDomSync() {
+	// remove
+	Array.from(document.querySelectorAll('[data-path]')).forEach( d => {
+		var exist = photos.exists(d.dataset.path);
+		if (! exist ) {
+			d.remove();
+		}
+	} )
 }
 
 var effectsTray = true;
@@ -353,6 +404,8 @@ slider.onmousedown = function() {
 
 		preview.style.height = x + 'px';
 		preview.style.transition = 'none';
+		e.stopPropagation();
+		e.preventDefault();
 		// preview.classList.add('no-transition');
 	};
 

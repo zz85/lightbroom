@@ -11,7 +11,8 @@ body {
 	flex-direction: column;
 }
 
-html {
+html, body {
+	height: 100%;
 }
 
 #topbar {
@@ -33,17 +34,7 @@ html {
 	width: 670px;
 }
 
-.pic {
-	/*max-height: 320px;
-	max-width: 320px;*/
 
-	margin: 5px;
-	float: left;
-}
-
-.pic img, .effect img {
-	border-radius: 4px;
-}
 
 .peek {
 	max-height: 120px;
@@ -165,7 +156,7 @@ img:hover {
 	flex-direction: column;
 }
 
-#preview > figure > img {
+#filmstrip > figure > img {
 	transition: height 350ms ease-out;
 }
 
@@ -174,6 +165,10 @@ img:hover {
 	height: 100%;*/
 	flex: 1;
 	overflow: auto;
+	
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 #preview-slider {
@@ -186,4 +181,65 @@ img:hover {
 
 .no-transition {
 	transition: none !important;
+}
+
+.checkbox {
+	/*background: deeppink;*/
+	/*width: 40px;
+	height: 40px;*/
+	position: absolute;
+	right: 0;
+	/*display: inline-block;*/
+	z-index: 10;
+	/*opacity: 0.2;*/
+	
+}
+
+.checkbox label:hover {
+	opacity: 1;
+	background: rgba(0,0,0,0.50);
+}
+
+.checkbox label {
+	display: inline-block;
+	position: relative;
+	font-size: 2em;
+	vertical-align: center;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+	transition: color 0.3s;
+	border: 2px solid rgba(255, 255, 255, 1);
+	width: 1.3em;
+	height: 1.3em;
+	opacity: 0.2;
+	border-radius: 50%;
+	transition: opacity 0.2s, border-radius 0.2s, border 0.25s;
+	margin: 4px;
+}
+
+.checkbox input[type="checkbox"],
+.checkbox input[type="radio"] {
+	display: none;
+}
+
+.checkbox .checked {
+	opacity: 1;
+	color: rgba(255, 255, 255, 1);
+	border: 2px solid rgba(255, 255, 255, 0.1);
+	border-radius: 0;
+}
+
+#filmstrip > div {
+	display: inline-block;
+	margin: 5px;
+	position: relative;
+}
+
+.pic {
+	margin: 0;
+}
+
+.pic img, .effect img {
+	border-radius: 4px;
 }
