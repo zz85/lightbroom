@@ -417,13 +417,14 @@ function photosDomSync() {
 }
 
 var effectsTray = true;
+var filterWrapper = document.getElementById('filter-wrapper');
 
 function toggleEffects() {
 	if (effectsTray) {
-		filters.style.height = '0px';
+		filterWrapper.style.height = '0px';
 		effectsTray = false;
 	} else {
-		filters.style.height = '128px';
+		filterWrapper.style.height = '128px';
 		effectsTray = true;
 	}
 }

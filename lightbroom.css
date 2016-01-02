@@ -54,8 +54,7 @@ html, body {
 	border: 2px solid #fff;
 }
 
-#filters {
-	display: flex;
+#filter-wrapper {
 	overflow: scroll;
 	background-color: #23262C;
 	box-shadow: 0px 1px 0px 0px rgba(255,255,255,0.30);
@@ -64,17 +63,9 @@ html, body {
 	height: 128px;
 }
 
-#filters > div:first-child{
-	padding-left: 14px;
-}
-
-#filters > div {
-	padding-top: 14px;
-	padding-bottom: 14px;
-}
-
-#filters > div:last-child{
-	padding-right: 14px;
+#filters {
+    padding: 14px;
+    display: flex;
 }
 
 button {
