@@ -282,7 +282,6 @@ function processImage2(oImg, path, i, exif) {
 	figure.scrollIntoView(false, 200);
 
 	img.onclick = function() {
-		togglePreviewSlider(1);
 		previewBig(oImg, photo, orientation);
 	}
 
