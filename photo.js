@@ -17,7 +17,7 @@ PhotoList.prototype.add = function(photo) {
 PhotoList.prototype.remove = function(photo) {
 	var i = this.list.indexOf(photo);
 	this.list.splice(i, 1);
-	
+
 	this.selection.delete(photo);
 	this.save();
 }
@@ -62,6 +62,8 @@ PhotoList.prototype.load = function() {
 PhotoList.prototype.empty = function() {
 	this.list = [];
 	this.save();
+
+	this.selection.clear()
 }
 
 PhotoList.prototype.exists = function(path) {
