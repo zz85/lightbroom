@@ -322,7 +322,7 @@ function processImage2(oImg, path, i, exif) {
 		cb.onchange();
 		previewBig(oImg, photo, orientation);
 	}
-	
+
 	/*
 		photos.remove(photo);
 		photosDomSync();
@@ -378,21 +378,22 @@ function clearThumbnails() {
 
 function removeSelection() {
 	var proceed = confirm('Remove ' + photos.selection.size + ' photos?');
-	if (!proceed) return; 
+	if (!proceed) return;
 	photos.selection.forEach(photos.remove.bind(photos));
 	photosDomSync();
 }
 
-var toggleggg = false;
+var toggleSelectAll = false;
 
 function selectAll() {
 	// photos.list.forEach(photos.selection.add.bind(photos));
 	// photosDomSync();
-	
+
+	toggleSelectAll = !toggleSelectAll;
+
 	Array.from(document.querySelectorAll('#filmstrip input')).forEach(
 		cb => {
-			toggleggg = !toggleggg;
-			cb.checked = toggleggg;
+			cb.checked = toggleSelectAll;
 			cb.onchange();
 		}
 	)
@@ -400,7 +401,7 @@ function selectAll() {
 
 function photosDomSync() {
 	var dom = Array.from(document.querySelectorAll('[data-path]'))
-	
+
 	dom.forEach( d => {
 		var match = photos.filter(d.dataset.path);
 
