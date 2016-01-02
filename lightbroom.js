@@ -345,7 +345,6 @@ function toggleEffects() {
 
 var slider = document.getElementById('preview-slider');
 slider.onmousedown = function() {
-
 	var moved = false;
 
 	var onmove = function(e) {
@@ -353,12 +352,16 @@ slider.onmousedown = function() {
 		var x = window.innerHeight - e.screenY;
 
 		preview.style.height = x + 'px';
+		preview.style.transition = 'none';
+		// preview.classList.add('no-transition');
 	};
 
 	var onup = function() {
 		if (!moved) {
 			togglePreviewSlider();
 		}
+		// preview.classList.remove('no-transition');
+		preview.style.transition = '';
 
 		window.removeEventListener('mousemove', onmove);
 		window.removeEventListener('mouseup', onup);

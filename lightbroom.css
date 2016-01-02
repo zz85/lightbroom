@@ -11,6 +11,9 @@ body {
 	flex-direction: column;
 }
 
+html {
+}
+
 #topbar {
 	background: #555862;
 	box-shadow: 0px 1px 0px 0px #24272D;
@@ -172,10 +175,15 @@ img:hover {
 	flex: 1;
 	overflow: auto;
 }
+
 #preview-slider {
 	display: block;
 	width: 100%;
 	height: 8px;
 	background: #000;
 	cursor: ns-resize;
+}
+
+.no-transition {
+	transition: none !important;
 }
