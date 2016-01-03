@@ -93,7 +93,10 @@ button {
 }
 
 button:active, button.active {
-	box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
+	/*box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);*/
+    background: #23262C;
+    border: 1px solid #000000;
+    box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.50);
 }
 
 button:hover {
@@ -239,7 +242,6 @@ img:hover {
 	opacity: 1;
 	color: rgba(255, 255, 255, 1);
 	border: 2px solid rgba(255, 255, 255, 0.8);
-
 	border-radius: 50%;
 }
 
