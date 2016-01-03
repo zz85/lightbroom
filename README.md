@@ -1,7 +1,7 @@
 Lightbroom
 --
 
-Back in 2003, I created [this repostory](https://github.com/zz85/lightbroom/commit/124270abe79588366e7bd041f32851aa548ddbc9) because I had some [wild ideas](https://plus.google.com/117614030945250277079/posts/LcApD7CFF86) of building a better replacement to my lightroom workflow... (yeah it is never that easy but one can always dream...)
+Back in 2003, I created [this repository](https://github.com/zz85/lightbroom/commit/124270abe79588366e7bd041f32851aa548ddbc9) because I had some [wild ideas](https://plus.google.com/117614030945250277079/posts/LcApD7CFF86) of building a better replacement to my lightroom workflow... (yeah it is never that easy but one can always dream...)
 
 ## Current Features
 
