@@ -11,6 +11,13 @@ var filters = document.getElementById('filters');
 var big = document.getElementById('big'), bigimg;
 var filmstrip = document.getElementById('filmstrip');
 
+var selectionMode = false;
+
+function toggleSelectMode(b) {
+    selectionMode = !selectionMode;
+    b.className = selectionMode ? 'active' : '';
+}
+
 var styles = [
 	"Nofilter",
 	"Aden",
@@ -318,9 +325,12 @@ function processImage2(oImg, path, i, exif) {
 	figure.scrollIntoView(false, 200);
 
 	img.onclick = function() {
-		cb.checked = !cb.checked;
-		cb.onchange();
-		previewBig(oImg, photo, orientation);
+        if (selectionMode) {
+            cb.checked = !cb.checked;
+            cb.onchange();
+        } else {
+		  previewBig(oImg, photo, orientation);
+        }
 	}
 
 	/*
@@ -339,13 +349,13 @@ function togglePreviewSlider(x) {
 	toggled =  x !== undefined ? x : toggled;
 	switch (toggled) {
 		case 0:
-			preview.style.height = '80%';
+			preview.style.height = '100%';
 			break;
 		case 1:
 			preview.style.height = '300px';
 			break;
 		case 2:
-			preview.style.height = '10px';
+			preview.style.height = '0px';
 			break;
 	}
 
@@ -419,13 +429,15 @@ function photosDomSync() {
 var effectsTray = true;
 var filterWrapper = document.getElementById('filter-wrapper');
 
-function toggleEffects() {
+function toggleEffects(button) {
 	if (effectsTray) {
-		filterWrapper.style.height = '0px';
-		effectsTray = false;
+        filterWrapper.style.height = '0px';
+        effectsTray = false;
+        button.className = '';
 	} else {
-		filterWrapper.style.height = '128px';
-		effectsTray = true;
+        filterWrapper.style.height = '128px';
+        effectsTray = true;
+        button.className = 'active';
 	}
 }
 

@@ -79,8 +79,9 @@ button {
 	color: #eaeaea;
 	font-size: 13px;
 
-	text-overflow: ellipsis;
-	white-space: nowrap;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    outline: none;
 }
 
 .effect {
@@ -91,7 +92,7 @@ button {
 	display: block;
 }
 
-button:active {
+button:active, button.active {
 	box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.30), inset 0px 0px 4px 0px rgba(0, 0, 0, 0.80);
 }
 
@@ -107,6 +108,12 @@ img {
 
 img:hover {
 	border: 1px solid #ddd;
+}
+
+#contents {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 #loupe {

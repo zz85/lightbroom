@@ -49,40 +49,54 @@ for some reason this is causing strange layout issues...
 			<button onclick="sizeThumbnails(360)">L</button>
 		</div>
 
+        <div>
+			Filmstrip:
+			<button onclick="sizeThumbnails(120)">Grid</button>
+			<button onclick="sizeThumbnails(240)">Loupe</button>
+			<button onclick="sizeThumbnails(360)">Split</button>
+		</div>
+
 		<div class="txt-drag-your-photos-here" style="bottom: 0">
-			<button onclick="toggleEffects()">Effects</button>
+			<button onclick="toggleEffects(this)" class="active">Effects</button>
 			Drag photos into the app to start.
 
-			<button onclick="removeSelection()">Remove</button>
-			<button onclick="clearThumbnails()">Remove All</button>
-
-			<button onclick="selectAll()">Select All</button>
+            <button onclick="toggleSelectMode(this)">Select Photos</button>
+            <button onclick="selectAll()">Select All</button>
+            <button onclick="removeSelection()">Remove</button>
+            <button onclick="clearThumbnails()">Remove All</button>
 		</div>
 
     </div>
+
+
 
     <div id="filter-wrapper">
         <div id="filters">
         </div>
     </div>
 
-	<div id="loupe">
-		<button onclick="togglePreviewSlider()" style="right:0; z-index: 20; position: fixed;">v</button>
+    <div id="contents">
 
-		<div id="sliders">
-			<input type="range" onchange="brightness(this)" onmousemove="brightness(this)" min="0" max="4" value="1" step="0.001"/>
-			<input type="range" onchange="contrast(this)" onmousemove="contrast(this)" min="0" max="4" value="1" step="0.001"/>
-		</div>
+        <div id="loupe">
+            <button onclick="togglePreviewSlider()" style="right:0; z-index: 20; position: fixed;">v</button>
+
+            <div id="sliders">
+                <input type="range" onchange="brightness(this)" onmousemove="brightness(this)" min="0" max="4" value="1" step="0.001"/>
+                <input type="range" onchange="contrast(this)" onmousemove="contrast(this)" min="0" max="4" value="1" step="0.001"/>
+            </div>
 
 
-		<div id="big">
-		</div>
-	</div>
+            <div id="big">
+            </div>
+        </div>
 
-	<div id="preview">
-		<div id="preview-slider"></div>
-		<div id="filmstrip"></div>
-	</div>
+        <div id="preview-slider"></div>
+
+        <div id="preview">
+            <div id="filmstrip"></div>
+        </div>
+
+    </div>
 
 	<script src="lightbroom.js"></script>
 	<script src="transfer-image.js"></script>
