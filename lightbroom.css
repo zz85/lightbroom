@@ -226,8 +226,8 @@ img:hover {
 .checkbox .checked {
 	opacity: 1;
 	color: rgba(255, 255, 255, 1);
-	border: 2px solid rgba(255, 255, 255, 0.1);
-	border-radius: 0;
+	border: 2px solid rgba(255, 255, 255, 1);
+	border-radius: 50%;
 }
 
 #filmstrip > div {
