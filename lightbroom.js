@@ -475,7 +475,7 @@ var FILTERS = {
     // type, min, max, default, step
     brightness: [0, 4, 1, 0.001],
     contrast: [0, 4, 1, 0.0001],
-    sepia: [0, 2, 0, 0.0001],
+    sepia: [0, 1, 0, 0.0001],
     grayscale: [0, 1, 0, 0.001],
     saturate: [0, 2, 1, 0.0001],
     blur: [0, 10, 0, 1, 'px'],
@@ -496,7 +496,9 @@ Object.keys(FILTERS).map( k => {
     filterSlider.value = values[2];
     filterSlider.step = values[3];
 
+    filterSlider.onmousemove =
     filterSlider.onchange = updateFilters;
+
 
     theSliders[k] = filterSlider;
 
@@ -506,6 +508,8 @@ Object.keys(FILTERS).map( k => {
 
 })
 
+var before = true;
+
 function updateFilters() {
     var img = big.querySelector('img');
 
@@ -513,13 +517,16 @@ function updateFilters() {
 
     Object.keys(theSliders).map( k => {
         var input = theSliders[k];
-        css += ` ${k}(${input.value}${FILTERS[k][4] || ''})`;
+        var values = FILTERS[k];
+        if (input.value !== values[2]) css += ` ${k}(${input.value}${values[4] || ''})`;
     });
 
     console.log(css);
 
-    img.style.cssText = css;
-    // big.style.cssText = css;
+    if (before)
+        img.style.cssText = css;
+    else
+        big.style.cssText = css;
 }
 
 function brightness(input) {
