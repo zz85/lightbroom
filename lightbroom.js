@@ -471,10 +471,61 @@ slider.onmousedown = function() {
 	window.addEventListener('mouseup', onup);
 }
 
+var FILTERS = {
+    // type, min, max, default, step
+    brightness: [0, 4, 1, 0.001],
+    contrast: [0, 4, 1, 0.0001],
+    sepia: [0, 2, 0, 0.0001],
+    grayscale: [0, 1, 0, 0.001],
+    saturate: [0, 2, 1, 0.0001],
+    blur: [0, 10, 0, 1, 'px'],
+    opacity: [0, 1, 1, 0.001],
+    // 'drop-shadow': [0, 10, 1, 0.001, 'px'],
+    'hue-rotate': [0, 360, 0, 0.5, 'deg'],
+    invert: [0, 1, 0, 0.001]
+};
+
+var theSliders = {};
+
+Object.keys(FILTERS).map( k => {
+    var values = FILTERS[k];
+    var filterSlider = document.createElement('input');
+    filterSlider.type = 'range';
+    filterSlider.min = values[0];
+    filterSlider.max = values[1];
+    filterSlider.value = values[2];
+    filterSlider.step = values[3];
+
+    filterSlider.onchange = updateFilters;
+
+    theSliders[k] = filterSlider;
+
+    // sliders.appendChild(document.createElement('br'));
+    sliders.appendChild(filterSlider);
+    sliders.appendChild(document.createTextNode(k));
+
+})
+
+function updateFilters() {
+    var img = big.querySelector('img');
+
+    var css = '-webkit-filter: ';
+
+    Object.keys(theSliders).map( k => {
+        var input = theSliders[k];
+        css += ` ${k}(${input.value}${FILTERS[k][4] || ''})`;
+    });
+
+    console.log(css);
+
+    img.style.cssText = css;
+    // big.style.cssText = css;
+}
+
 function brightness(input) {
 	console.log(input.value);
-	var img = big.querySelector('img');
-	img.style.cssText = `-webkit-filter: brightness(${input.value})`;
+
+
 	// big.style.cssText = `-webkit-filter: brightness(${input.value})`;
 }
 
