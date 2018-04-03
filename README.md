@@ -23,6 +23,10 @@ Node modules
 
 `npm install --production`
 
+```
+npx electron-packager app LightBroom --platform=darwin --arch=x64 --version=0.36.2 --version-string.CompanyName=zz85 --version-string.ProductName=LightBroom
+```
+
 ## Current State
 
 An Instagram-like desktop app developed with Electron and Web technologies for a simple photo retouching workflow.
